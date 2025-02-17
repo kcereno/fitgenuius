@@ -25,12 +25,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="bg-gray-100 text-gray-800 dark:bg-neutral-900 dark:text-gray-300"
+      className="bg-gray-100 text-gray-800 dark:bg-neutral-900 dark:text-gray-300 h-screen overflow-hidden"
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col h-full`}
       >
-        {children}
+        {/* {children} */}
+        <header className="p-4 bg-gray-800 text-white text-center">
+          My PWA Header
+        </header>
+        <main className="flex-1 overflow-y-auto p-4 ">
+          {children} {/* Page content will go here */}
+        </main>
+        <footer className="p-4 bg-gray-800 text-white text-center">
+          Fixed Footer
+        </footer>
       </body>
     </html>
   );
