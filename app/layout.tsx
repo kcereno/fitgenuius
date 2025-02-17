@@ -36,6 +36,54 @@ export default function RootLayout({
         </header>
         <main className="flex-1 overflow-y-auto p-4 ">
           {children} {/* Page content will go here */}
+          <p>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis
+            labore deserunt earum nostrum est dolor ea facere rem ipsam tenetur!
+            Magnam aliquam esse adipisci ea mollitia fugiat, quaerat fuga eos
+            fugit accusamus quae perspiciatis? Esse ea perspiciatis non
+            blanditiis, laborum placeat mollitia, aliquam veritatis dolorum
+            architecto doloremque iste ab commodi rem! Cumque voluptate nulla
+            blanditiis reprehenderit natus ipsum cum, similique dolore vitae
+            autem beatae nihil dignissimos asperiores perspiciatis ad ea facilis
+            distinctio quod soluta quidem inventore voluptates expedita in
+            molestiae? Quidem, suscipit! Repellat aspernatur excepturi magni
+            porro quod eveniet error iusto neque, sint accusantium? Quod
+            aspernatur cum possimus eum, ab quo iure sed ea debitis! Distinctio
+            odio dolor aliquid voluptate, optio odit corrupti ut, possimus ad
+            id, eligendi nemo fuga atque ratione? Accusamus aperiam quo est illo
+            perspiciatis fugit ex rerum deleniti aliquam quas, commodi
+            distinctio veniam, earum vel iusto iste ipsum aliquid doloribus cum,
+            optio laborum. Iure iusto obcaecati libero cupiditate sunt eos
+            similique distinctio perferendis quam, provident molestiae
+            aspernatur optio labore vel debitis nesciunt tempora harum veritatis
+            adipisci perspiciatis sit, hic reiciendis illo. Illo, minima.
+            Exercitationem, quaerat repellat officia laudantium pariatur,
+            aliquid blanditiis ipsum explicabo soluta quas numquam, architecto
+            ea at itaque molestiae quis voluptates! Est vero minima quia
+            repudiandae non sunt nihil, repellat architecto beatae dolorem
+            voluptates consequatur ipsum laboriosam ipsam doloribus esse, nisi
+            possimus quam. Nobis voluptate molestias itaque alias quia debitis,
+            esse at iste voluptas, nam in ullam natus eum numquam necessitatibus
+            iusto sapiente ipsam. Voluptates, nihil? Eveniet impedit assumenda
+            iusto voluptatum commodi obcaecati recusandae quisquam ullam minus
+            pariatur veritatis quo excepturi exercitationem doloremque magnam,
+            quod tempore sint iure. Veniam nulla nemo rem minus ea, nobis vel
+            ipsa quisquam animi, aspernatur possimus tempora! Numquam,
+            dignissimos. Ea qui nam dolor rem error non voluptatibus, excepturi
+            illo odio commodi doloremque, mollitia quibusdam harum officiis.
+            Officiis, repellat ipsa voluptates repellendus quae inventore magni
+            assumenda ut nobis nesciunt, sed distinctio ducimus soluta,
+            similique debitis tempora eaque nostrum quibusdam pariatur commodi
+            qui asperiores accusamus! Nihil sit aut, ratione vero ipsum
+            similique in? Culpa quam rerum nisi excepturi dolores? Quo corrupti
+            ratione recusandae praesentium eaque consequatur veritatis dicta
+            eos, dolorem, aut ipsam commodi accusamus fugit ipsum cumque in
+            excepturi ea vitae possimus. Est, aspernatur natus quidem possimus
+            praesentium consectetur non excepturi esse temporibus nulla nesciunt
+            ea laborum, facere maiores eos quo labore omnis odit cumque. Velit
+            illum sunt fugiat eos quo vel repellendus architecto. Minus aliquid
+            temporibus impedit, dicta maxime quo!
+          </p>
         </main>
         <footer className="p-4 bg-gray-800 text-white text-center">
           Fixed Footer
