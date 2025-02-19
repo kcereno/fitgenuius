@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Removes iOS bounce effect */
+html,
+body {
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
+}

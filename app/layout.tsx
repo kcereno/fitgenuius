@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="bg-gray-100 text-gray-800 dark:bg-neutral-900 dark:text-gray-300"
+      className="bg-gray-100 text-gray-800 dark:bg-neutral-900 dark:text-gray-300 overscroll-none"
     >
       <body className="flex flex-col min-h-screen">
         <main className="flex-1 overflow-y-auto mb-14">{children}</main>
