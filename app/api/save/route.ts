@@ -13,7 +13,6 @@ export async function POST(req: Request) {
   try {
     const { exerciseName } = await req.json();
 
-    console.log(' POST ~ exeriseName:', exerciseName);
     // Read Existing Data
     let existingData = [];
     if (fs.existsSync(filePath)) {
