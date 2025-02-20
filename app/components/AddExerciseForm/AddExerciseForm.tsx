@@ -24,7 +24,7 @@ const AddExerciseForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/save', {
+      const response = await fetch('/api/exercises', {
         method: 'POST',
         body: JSON.stringify({ exerciseName }),
         headers: { 'Content-Type': 'application/json' },
