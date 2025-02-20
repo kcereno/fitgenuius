@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { saveExercise } from './SaveExercise';
 
 const AddExerciseForm = () => {
   const [exerciseName, setExerciseName] = useState('');
@@ -24,14 +25,7 @@ const AddExerciseForm = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/exercises', {
-        method: 'POST',
-        body: JSON.stringify({ exerciseName }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const result = await response.json();
-      console.log(result.message);
+      const result = await saveExercise(exerciseName);
 
       if (result.success) {
         setExerciseName(''); // Clear input on success
