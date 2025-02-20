@@ -30,7 +30,7 @@ if (!fs.existsSync(path.dirname(filePath))) {
 
 export async function POST(req: Request) {
   try {
-    const { exerciseName } = await req.json();
+    const exercise = await req.json();
 
     // Read Existing Data
     let existingData = [];
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     }
 
     // Append new entry
-    existingData.push({ exerciseName });
+    existingData.push(exercise);
 
     // Write back to the file
     fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));

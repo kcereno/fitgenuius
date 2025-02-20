@@ -14,9 +14,11 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { saveExercise } from './SaveExercise';
+import { Exercise } from '@/types/exercise';
 
 const AddExerciseForm = () => {
-  const [exerciseName, setExerciseName] = useState('');
+  const [exercise, setExercise] = useState<Exercise>({ name: '' });
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -25,10 +27,10 @@ const AddExerciseForm = () => {
     setLoading(true);
 
     try {
-      const result = await saveExercise(exerciseName);
+      const result = await saveExercise(exercise);
 
       if (result.success) {
-        setExerciseName(''); // Clear input on success
+        setExercise({ name: '' }); // Clear input on success
       }
     } catch (error) {
       console.error('Error saving exercise:', error);
@@ -40,7 +42,8 @@ const AddExerciseForm = () => {
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setExerciseName(e.target.value);
+    const { name, value } = e.target;
+    setExercise((prevVal) => ({ ...prevVal, [name]: value }));
   };
 
   return (
@@ -64,15 +67,16 @@ const AddExerciseForm = () => {
         >
           <div className="grid grid-cols-4 items-center gap-4">
             <Label
-              htmlFor="exerciseName"
+              htmlFor="name"
               className="text-right"
             >
               Exercise
             </Label>
             <Input
-              id="exerciseName"
+              id="name"
+              name="name"
               onChange={handleTextChange}
-              value={exerciseName}
+              value={exercise.name}
               className="col-span-3"
               autoFocus={false}
               tabIndex={-1}

@@ -1,7 +1,9 @@
-export const saveExercise = async (exerciseName: any) => {
+import { Exercise } from '@/types/exercise';
+
+export const saveExercise = async (exercise: Exercise) => {
   const response = await fetch('/api/exercises', {
     method: 'POST',
-    body: JSON.stringify({ exerciseName }),
+    body: JSON.stringify(exercise),
     headers: { 'Content-Type': 'application/json' },
   });
 
