@@ -1,12 +1,10 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import AddExerciseForm from '../components/AddExerciseForm/AddExerciseForm';
 
 const ExercisesPage = () => {
   return (
     <div className="p-4">
-      <Button className="fixed bottom-20 left-1/2 -translate-x-1/2">
-        Add Exercise
-      </Button>
+      <AddExerciseForm />
     </div>
   );
 };
