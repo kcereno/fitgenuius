@@ -17,10 +17,31 @@ import { Input } from '@/components/ui/input';
 const AddExerciseForm = () => {
   const [exerciseName, setExerciseName] = useState('');
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('submitted');
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/save', {
+        method: 'POST',
+        body: JSON.stringify({ exerciseName }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const result = await response.json();
+      console.log(result.message);
+
+      if (result.success) {
+        setExerciseName(''); // Clear input on success
+      }
+    } catch (error) {
+      console.error('Error saving exercise:', error);
+    } finally {
+      setLoading(false);
+    }
+
     setOpen(false);
   };
 
@@ -65,7 +86,10 @@ const AddExerciseForm = () => {
           </div>
 
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">
+              {' '}
+              {loading ? 'Saving...' : 'Save changes'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
