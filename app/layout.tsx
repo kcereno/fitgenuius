@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import './globals.css';
 import NavBar from '../components/Navbar/NavBar';
+import QueryProvider from '@/components/QueryProvider/QueryProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -19,7 +20,10 @@ export default function RootLayout({
       className="bg-gray-100 text-gray-800 dark:bg-neutral-900 dark:text-gray-300 overscroll-none"
     >
       <body className="flex flex-col min-h-screen">
-        <main className="flex-1 overflow-y-auto mb-14">{children}</main>
+        <QueryProvider>
+          <main className="flex-1 overflow-y-auto mb-14">{children}</main>
+        </QueryProvider>
+
         <NavBar />
       </body>
     </html>

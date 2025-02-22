@@ -13,8 +13,9 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { saveExercise } from './SaveExercise';
+
 import { Exercise } from '@/types/exercise';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const AddExerciseForm = () => {
   const [exercise, setExercise] = useState<Exercise>({ name: '' });
@@ -22,21 +23,31 @@ const AddExerciseForm = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const queryClient = useQueryClient();
+
+  // Mutation for Adding New Exercise
+  const mutation = useMutation<Exercise, Error, { name: string }>({
+    mutationFn: async (newExercise) => {
+      const res = await fetch('/api/exercises', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newExercise),
+      });
+      if (!res.ok) {
+        throw new Error('Failed to add exercise');
+      }
+
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+    },
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    mutation.mutate(exercise);
     setLoading(true);
-
-    try {
-      const result = await saveExercise(exercise);
-
-      if (result.success) {
-        setExercise({ name: '' }); // Clear input on success
-      }
-    } catch (error) {
-      console.error('Error saving exercise:', error);
-    } finally {
-      setLoading(false);
-    }
 
     setOpen(false);
   };
