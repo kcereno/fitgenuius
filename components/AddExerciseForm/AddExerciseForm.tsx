@@ -13,42 +13,19 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-
 import { Exercise } from '@/types/exercise';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAddExercise } from '@/hooks/useAddExercise';
 
 const AddExerciseForm = () => {
   const [exercise, setExercise] = useState<Exercise>({ name: '' });
-
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const queryClient = useQueryClient();
-
-  // Mutation for Adding New Exercise
-  const mutation = useMutation<Exercise, Error, { name: string }>({
-    mutationFn: async (newExercise) => {
-      const res = await fetch('/api/exercises', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newExercise),
-      });
-      if (!res.ok) {
-        throw new Error('Failed to add exercise');
-      }
-
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['exercises'] });
-    },
-  });
+  const { mutate, loading, error } = useAddExercise();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutation.mutate(exercise);
-    setLoading(true);
-
+    mutate(exercise);
+    setExercise({ name: '' });
     setOpen(false);
   };
 
@@ -100,6 +77,7 @@ const AddExerciseForm = () => {
               {loading ? 'Saving...' : 'Save changes'}
             </Button>
           </DialogFooter>
+          {error ? <p>Error son</p> : null}
         </form>
       </DialogContent>
     </Dialog>
