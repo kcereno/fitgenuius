@@ -1,4 +1,4 @@
 export type ApiResponse = {
   success: boolean;
-  messsage: string;
+  message: string;
 };

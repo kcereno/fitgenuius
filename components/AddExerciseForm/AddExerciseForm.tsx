@@ -18,8 +18,12 @@ import { useMutationRequest } from '@/hooks/useMutationRequest';
 import { ApiResponse } from '@/types/api';
 import { addExercise } from './addExercise';
 
+const INITIAL_NEW_EXERCISE_VALUE = { name: '' } as Exercise;
+
 const AddExerciseForm = () => {
-  const [exercise, setExercise] = useState<Exercise>({ name: '' });
+  const [newExercise, setNewExercise] = useState<Exercise>(
+    INITIAL_NEW_EXERCISE_VALUE
+  );
   const [open, setOpen] = useState(false);
 
   const { mutate, loading, error } = useMutationRequest<ApiResponse, Exercise>({
@@ -29,14 +33,15 @@ const AddExerciseForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(exercise);
-    setExercise({ name: '' });
+    mutate(newExercise);
+    setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
     setOpen(false);
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setExercise((prevVal) => ({ ...prevVal, [name]: value }));
+    const updatedNewExercise = { ...newExercise, [name]: value };
+    setNewExercise(updatedNewExercise);
   };
 
   return (
@@ -69,7 +74,7 @@ const AddExerciseForm = () => {
               id="name"
               name="name"
               onChange={handleTextChange}
-              value={exercise.name}
+              value={newExercise.name}
               className="col-span-3"
               autoFocus={false}
               tabIndex={-1}
