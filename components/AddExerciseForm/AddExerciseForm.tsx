@@ -14,13 +14,18 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Exercise } from '@/types/exercise';
-import { useAddExercise } from '@/hooks/useAddExercise';
+import { useMutationRequest } from '@/hooks/useMutationRequest';
+import { ApiResponse } from '@/types/api';
+import { addExercise } from './addExercise';
 
 const AddExerciseForm = () => {
   const [exercise, setExercise] = useState<Exercise>({ name: '' });
   const [open, setOpen] = useState(false);
 
-  const { mutate, loading, error } = useAddExercise();
+  const { mutate, loading, error } = useMutationRequest<ApiResponse, Exercise>({
+    mutationFn: addExercise,
+    invalidateKey: 'exercises',
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
