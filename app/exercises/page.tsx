@@ -1,16 +1,22 @@
-import React, { Suspense } from 'react';
+'use client';
+
+import React from 'react';
 import AddExerciseForm from '../../components/AddExerciseForm/AddExerciseForm';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import { fetchExercises } from '../lib/actions';
+import { useQuery } from '@tanstack/react-query';
 
-const ExercisesPage = async () => {
-  const exercises = await fetchExercises();
+const ExercisesPage = () => {
+  const { data: exercises, isLoading } = useQuery({
+    queryKey: ['exercises'],
+    queryFn: fetchExercises,
+  });
 
   return (
     <div className="p-4">
-      <Suspense fallback={<p>Loading exercises</p>}>
-        <ExerciseList initialExercises={exercises} />
-      </Suspense>
+      {isLoading && <p>Fetching exercises</p>}
+      <ExerciseList exercises={exercises ?? []} />
+
       <AddExerciseForm />
     </div>
   );

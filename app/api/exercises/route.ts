@@ -6,7 +6,6 @@ const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET() {
   try {
-    // Read the JSON file
     const fileData = fs.existsSync(filePath)
       ? fs.readFileSync(filePath, 'utf-8')
       : '[]';
@@ -15,17 +14,12 @@ export async function GET() {
 
     return NextResponse.json({ success: true, exercises });
   } catch (error) {
-    console.log(' GET ~ error:', error);
+    console.error('GET ~ error:', error);
     return NextResponse.json(
       { success: false, message: 'Error reading file' },
       { status: 500 }
     );
   }
-}
-
-// Ensure the 'data' directory exists
-if (!fs.existsSync(path.dirname(filePath))) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
 }
 
 export async function POST(req: Request) {
