@@ -16,7 +16,6 @@ export const fetchExercises = async () => {
 };
 
 export const fetchExercise = async (exerciseId: string) => {
-  console.log(' fetchExercise ~ exerciseId:', exerciseId);
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
   const res = await fetch(url);
 
@@ -31,4 +30,21 @@ export const fetchExercise = async (exerciseId: string) => {
   }
 
   return exercise;
+};
+
+export const deleteExercise = async (exerciseId: string) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+
+  const res = await fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to delete exercise: ${res.statusText}`);
+  }
+
+  return await res.json();
 };

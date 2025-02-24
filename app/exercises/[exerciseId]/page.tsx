@@ -2,12 +2,15 @@
 
 import React from 'react';
 import { useParams } from 'next/navigation';
-import { fetchExercise } from '@/app/lib/actions';
+import { deleteExercise, fetchExercise } from '@/app/lib/actions';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 const ExercisePage = () => {
   const { exerciseId } = useParams();
+
+  const router = useRouter();
 
   const {
     data: exercise,
@@ -23,7 +26,14 @@ const ExercisePage = () => {
 
   if (error) return <p>Error fetching exercise</p>;
 
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    const result = await deleteExercise(exercise.id);
+    console.log(' handleDelete ~ result:', result);
+
+    if (result.success) {
+      router.push('/exercises');
+    }
+  };
   const handelEdit = () => {};
 
   return (
