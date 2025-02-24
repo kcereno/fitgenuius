@@ -4,6 +4,7 @@ import React from 'react';
 import { useParams } from 'next/navigation';
 import { fetchExercise } from '@/app/lib/actions';
 import { useQuery } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
 
 const ExercisePage = () => {
   const { exerciseId } = useParams();
@@ -22,7 +23,18 @@ const ExercisePage = () => {
 
   if (error) return <p>Error fetching exercise</p>;
 
-  return <div>{exercise?.name}</div>;
+  const handleDelete = () => {};
+  const handelEdit = () => {};
+
+  return (
+    <div className="p-4 flex flex-col min-h-screen gap-4">
+      <h1 className="text-center text-xl font-bold">{exercise?.name}</h1>
+      <div className="flex gap-4 justify-center">
+        <Button onClick={handelEdit}>Edit</Button>
+        <Button onClick={handleDelete}>Delete</Button>
+      </div>
+    </div>
+  );
 };
 
 export default ExercisePage;

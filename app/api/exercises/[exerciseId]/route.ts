@@ -23,7 +23,6 @@ export async function GET(
     const exercise = exercises.find(
       (exercise: Exercise) => exercise.id === formattedExerciseId
     );
-    console.log(' exercise:', exercise);
 
     return NextResponse.json({ success: true, exercise });
   } catch (error) {
