@@ -17,3 +17,7 @@ export function capitalizeWords(text: string): string {
     .toLowerCase() // Convert entire string to lowercase first
     .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize first letter of each word
 }
+
+export function dashToUnderscore(text: string): string {
+  return text.replace(/-/g, '_'); // Replace all dashes with underscores
+}
