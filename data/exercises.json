@@ -1,41 +1,14 @@
 [
   {
-    "name": "Bench"
+    "id": "bench_press",
+    "name": "Bench Press"
   },
   {
-    "name": "Squat"
+    "id": "trapbar_deadlift",
+    "name": "Trapbar Deadlift"
   },
   {
-    "name": "DL"
-  },
-  {
-    "name": "5534534534534"
-  },
-  {
-    "name": "fsdfsdfsd"
-  },
-  {
-    "name": "fsdfsdfsdgdfdf"
-  },
-  {
-    "name": "test 1"
-  },
-  {
-    "name": "test 2"
-  },
-  {
-    "name": "ffsdfsd"
-  },
-  {
-    "name": "KB swing"
-  },
-  {
-    "name": "KB windmill"
-  },
-  {
-    "name": "bvcbbcv"
-  },
-  {
-    "name": "fdsfcsxcvxc"
+    "id": "safety_squat",
+    "name": "Safety Squat"
   }
 ]

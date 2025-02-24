@@ -6,7 +6,6 @@ import { Exercise } from '@/types/exercise';
 import Link from 'next/link';
 
 const ExerciseList = ({ exercises }: { exercises: Exercise[] }) => {
-  console.log(' ExerciseList ~ exercises:', exercises);
   return (
     <ul>
       {exercises.map(({ name }: Exercise) => (

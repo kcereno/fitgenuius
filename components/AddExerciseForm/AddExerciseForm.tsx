@@ -17,8 +17,16 @@ import { Exercise } from '@/types/exercise';
 import { useMutationRequest } from '@/hooks/useMutationRequest';
 import { ApiResponse } from '@/types/api';
 import { addExercise } from './addExercise';
+import {
+  capitalizeWords,
+  normalizeToUnderscore,
+  sanitizeInput,
+} from '@/utils/formatters';
 
-const INITIAL_NEW_EXERCISE_VALUE = { name: '' } as Exercise;
+const INITIAL_NEW_EXERCISE_VALUE = {
+  id: '',
+  name: '',
+} as Exercise;
 
 const AddExerciseForm = () => {
   const [newExercise, setNewExercise] = useState<Exercise>(
@@ -33,14 +41,25 @@ const AddExerciseForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(newExercise);
+
+    const trimmedInput = capitalizeWords(sanitizeInput(newExercise.name));
+    const id = normalizeToUnderscore(trimmedInput).toLocaleLowerCase();
+
+    const sanitizedNewExercise = { ...newExercise, id, name: trimmedInput };
+
+    mutate(sanitizedNewExercise);
     setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
     setOpen(false);
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const updatedNewExercise = { ...newExercise, [name]: value };
+
+    const updatedNewExercise = {
+      ...newExercise,
+      [name]: value,
+    };
+
     setNewExercise(updatedNewExercise);
   };
 
