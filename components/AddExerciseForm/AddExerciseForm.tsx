@@ -14,6 +14,7 @@ import {
   sanitizeInput,
 } from '@/utils/formatters';
 import DialogForm from '../DialogForm/DialogForm';
+import { Button } from '../ui/button';
 
 const INITIAL_NEW_EXERCISE_VALUE = {
   id: '',
@@ -53,9 +54,15 @@ const AddExerciseForm = () => {
     setNewExercise(updatedNewExercise);
   };
 
+  const formTrigger = (
+    <Button className="fixed bottom-20 left-1/2 -translate-x-1/2">
+      Add Exercise
+    </Button>
+  );
+
   return (
     <DialogForm
-      triggerText="Add Exercise"
+      trigger={formTrigger}
       title="New Exercise Form"
       description="Add Exercise Details"
       onSubmit={handleSubmit}

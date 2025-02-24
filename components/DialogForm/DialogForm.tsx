@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 
 interface DialogFormProps {
-  triggerText: string;
+  trigger: React.ReactNode;
   title: string;
   description: string;
   children: React.ReactNode;
@@ -24,7 +24,7 @@ interface DialogFormProps {
 }
 
 const DialogForm = ({
-  triggerText,
+  trigger,
   title,
   description,
   children,
@@ -50,11 +50,7 @@ const DialogForm = ({
       open={open}
       onOpenChange={setOpen}
     >
-      <DialogTrigger asChild>
-        <Button className="fixed bottom-20 left-1/2 -translate-x-1/2">
-          {triggerText}
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogHeader className="text-left">
           <DialogTitle>{title}</DialogTitle>

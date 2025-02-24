@@ -6,6 +6,7 @@ import { deleteExercise, fetchExercise } from '@/app/lib/actions';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import EditExerciseForm from '@/components/EditExerciseForm/EditExerciseForm';
 
 const ExercisePage = () => {
   const { exerciseId } = useParams();
@@ -34,13 +35,12 @@ const ExercisePage = () => {
       router.push('/exercises');
     }
   };
-  const handelEdit = () => {};
 
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{exercise?.name}</h1>
       <div className="flex gap-4 justify-center">
-        <Button onClick={handelEdit}>Edit</Button>
+        <EditExerciseForm />
         <Button onClick={handleDelete}>Delete</Button>
       </div>
     </div>
