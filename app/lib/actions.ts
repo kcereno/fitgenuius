@@ -1,3 +1,5 @@
+import { Exercise } from '@/types/exercise';
+
 export const fetchExercises = async () => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises`;
 
@@ -33,6 +35,7 @@ export const fetchExercise = async (exerciseId: string) => {
 };
 
 export const deleteExercise = async (exerciseId: string) => {
+  console.log('edit Exercise Triggered');
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
 
   const res = await fetch(url, {
@@ -47,4 +50,25 @@ export const deleteExercise = async (exerciseId: string) => {
   }
 
   return await res.json();
+};
+
+export const editExercise = async (
+  exerciseId: string,
+  updatedExerciseData: Exercise
+) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedExerciseData),
+  });
+
+  console.log(await res);
+
+  if (!res.ok) {
+    throw new Error('Failed to update exercise');
+  }
+
+  return res.json();
 };

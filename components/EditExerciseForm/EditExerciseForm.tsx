@@ -6,6 +6,9 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Exercise } from '@/types/exercise';
+import { useMutationRequest } from '@/hooks/useMutationRequest';
+import { editExercise } from '@/app/lib/actions';
+import { ApiResponse } from '@/types/api';
 
 interface EditExerciseFormProps {
   initialExerciseFormData: Exercise;
@@ -14,13 +17,36 @@ interface EditExerciseFormProps {
 const EditExerciseForm = ({
   initialExerciseFormData,
 }: EditExerciseFormProps) => {
-  const [exerciseFormData, editExerciseFormData] = useState<Exercise>(
+  const [exerciseFormData, setExerciseFormData] = useState<Exercise>(
     initialExerciseFormData
   );
-  const handleSubmit = () => {};
-  const handleTextChange = () => {};
-  const loading = false;
-  const error = null;
+
+  const { mutate, loading, error } = useMutationRequest<
+    ApiResponse,
+    { exerciseId: string; updatedExercise: Exercise }
+  >({
+    mutationFn: ({ exerciseId, updatedExercise }) =>
+      editExercise(exerciseId, updatedExercise),
+    invalidateKey: 'exercises',
+  });
+
+  const handleSubmit = () => {
+    mutate({
+      exerciseId: initialExerciseFormData.id,
+      updatedExercise: exerciseFormData,
+    });
+  };
+
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    const updatedExerciseFormData = {
+      ...exerciseFormData,
+      [name]: value,
+    };
+
+    setExerciseFormData(updatedExerciseFormData);
+  };
 
   const formTrigger = <Button>Edit</Button>;
 

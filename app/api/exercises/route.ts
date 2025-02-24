@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
@@ -22,7 +22,7 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const exercise = await req.json();
 
