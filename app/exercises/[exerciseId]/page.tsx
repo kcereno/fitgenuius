@@ -14,7 +14,7 @@ const ExercisePage = () => {
   const router = useRouter();
 
   const {
-    data: exercise,
+    data: exerciseData,
     isLoading,
     error,
   } = useQuery({
@@ -28,7 +28,7 @@ const ExercisePage = () => {
   if (error) return <p>Error fetching exercise</p>;
 
   const handleDelete = async () => {
-    const result = await deleteExercise(exercise.id);
+    const result = await deleteExercise(exerciseData.id);
     console.log(' handleDelete ~ result:', result);
 
     if (result.success) {
@@ -38,9 +38,9 @@ const ExercisePage = () => {
 
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
-      <h1 className="text-center text-xl font-bold">{exercise?.name}</h1>
+      <h1 className="text-center text-xl font-bold">{exerciseData?.name}</h1>
       <div className="flex gap-4 justify-center">
-        <EditExerciseForm />
+        <EditExerciseForm initialExerciseFormData={exerciseData} />
         <Button onClick={handleDelete}>Delete</Button>
       </div>
     </div>

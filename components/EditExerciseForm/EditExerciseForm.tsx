@@ -1,12 +1,22 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import DialogForm from '../DialogForm/DialogForm';
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { Exercise } from '@/types/exercise';
 
-const EditExerciseForm = () => {
+interface EditExerciseFormProps {
+  initialExerciseFormData: Exercise;
+}
+
+const EditExerciseForm = ({
+  initialExerciseFormData,
+}: EditExerciseFormProps) => {
+  const [exerciseFormData, editExerciseFormData] = useState<Exercise>(
+    initialExerciseFormData
+  );
   const handleSubmit = () => {};
   const handleTextChange = () => {};
   const loading = false;
@@ -34,7 +44,7 @@ const EditExerciseForm = () => {
           id="name"
           name="name"
           onChange={handleTextChange}
-          value={'test'}
+          value={exerciseFormData.name}
           className="col-span-3"
         />
       </div>
