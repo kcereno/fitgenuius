@@ -22,6 +22,7 @@ import {
   normalizeToUnderscore,
   sanitizeInput,
 } from '@/utils/formatters';
+import DialogForm from '../DialogForm/DialogForm';
 
 const INITIAL_NEW_EXERCISE_VALUE = {
   id: '',
@@ -39,7 +40,7 @@ const AddExerciseForm = () => {
     invalidateKey: 'exercises',
   });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const trimmedInput = capitalizeWords(sanitizeInput(newExercise.name));
@@ -64,52 +65,75 @@ const AddExerciseForm = () => {
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <DialogTrigger asChild>
-        <Button className="fixed bottom-20 left-1/2 -translate-x-1/2">
-          Add Exercise
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader className="text-left">
-          <DialogTitle>New Exercise Form</DialogTitle>
-          <DialogDescription>Add Exercise Details</DialogDescription>
-        </DialogHeader>
-        <form
-          className="grid gap-4 py-4"
-          onSubmit={handleSubmit}
-        >
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label
-              htmlFor="name"
-              className="text-right"
-            >
-              Exercise
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              onChange={handleTextChange}
-              value={newExercise.name}
-              className="col-span-3"
-              autoFocus={false}
-              tabIndex={-1}
-            />
-          </div>
+    // <Dialog
+    //   open={open}
+    //   onOpenChange={setOpen}
+    // >
+    //   <DialogTrigger asChild>
+    //     <Button className="fixed bottom-20 left-1/2 -translate-x-1/2">
+    //       Add Exercise
+    //     </Button>
+    //   </DialogTrigger>
+    //   <DialogContent>
+    //     <DialogHeader className="text-left">
+    //       <DialogTitle>New Exercise Form</DialogTitle>
+    //       <DialogDescription>Add Exercise Details</DialogDescription>
+    //     </DialogHeader>
+    //     <form
+    //       className="grid gap-4 py-4"
+    //       onSubmit={handleSubmit}
+    //     >
+    //       <div className="grid grid-cols-4 items-center gap-4">
+    //         <Label
+    //           htmlFor="name"
+    //           className="text-right"
+    //         >
+    //           Exercise
+    //         </Label>
+    //         <Input
+    //           id="name"
+    //           name="name"
+    //           onChange={handleTextChange}
+    //           value={newExercise.name}
+    //           className="col-span-3"
+    //           autoFocus={false}
+    //           tabIndex={-1}
+    //         />
+    //       </div>
 
-          <DialogFooter>
-            <Button type="submit">
-              {' '}
-              {loading ? 'Saving...' : 'Save changes'}
-            </Button>
-          </DialogFooter>
-          {error ? <p>Error son</p> : null}
-        </form>
-      </DialogContent>
-    </Dialog>
+    //       <DialogFooter>
+    //         <Button type="submit">
+    //           {' '}
+    //           {loading ? 'Saving...' : 'Save changes'}
+    //         </Button>
+    //       </DialogFooter>
+    //       {error ? <p>Error son</p> : null}
+    //     </form>
+    //   </DialogContent>
+    // </Dialog>
+
+    <DialogForm
+      triggerText="Add Exercise"
+      title="New Exercise Form"
+      description="Add Exercise Details"
+      onSubmit={handleSubmit}
+    >
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label
+          htmlFor="name"
+          className="text-right"
+        >
+          Exercise
+        </Label>
+        <Input
+          id="name"
+          name="name"
+          onChange={handleTextChange}
+          value={newExercise.name}
+          className="col-span-3"
+        />
+      </div>
+    </DialogForm>
   );
 };
 

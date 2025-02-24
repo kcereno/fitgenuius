@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "bench_press",
+    "name": "Bench Press"
+  },
+  {
+    "id": "squat",
+    "name": "Squat"
+  }
+]
