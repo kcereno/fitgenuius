@@ -19,6 +19,8 @@ interface DialogFormProps {
   children: React.ReactNode;
   submitText?: string;
   onSubmit: (e: React.FormEvent) => Promise<void> | void;
+  loading: boolean;
+  error: string | null;
 }
 
 const DialogForm = ({
@@ -28,24 +30,19 @@ const DialogForm = ({
   children,
   submitText = 'Save changes',
   onSubmit,
+  loading,
+  error,
 }: DialogFormProps) => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
     try {
       await onSubmit(e);
       setOpen(false);
     } catch (error) {
       console.log(' handleSubmit ~ error:', error);
-      setError('Something Went Wrong');
-    } finally {
-      setLoading(false);
     }
   };
   return (

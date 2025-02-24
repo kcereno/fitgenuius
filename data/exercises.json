@@ -6,5 +6,21 @@
   {
     "id": "squat",
     "name": "Squat"
+  },
+  {
+    "id": "dead_lift",
+    "name": "Dead Lift"
+  },
+  {
+    "id": "test",
+    "name": "Test"
+  },
+  {
+    "id": "test_2",
+    "name": "Test 2"
+  },
+  {
+    "id": "bicep_curl",
+    "name": "Bicep Curl"
   }
 ]
