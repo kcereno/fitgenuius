@@ -3,14 +3,10 @@
 import React from 'react';
 import AddExerciseForm from '../../components/AddExerciseForm/AddExerciseForm';
 import ExerciseList from '../../components/ExerciseList/ExerciseList';
-import { fetchExercises } from '../lib/actions';
-import { useQuery } from '@tanstack/react-query';
+import useFetchExercises from '@/hooks/useFetchExercises';
 
 const ExercisesPage = () => {
-  const { data: exercises, isLoading } = useQuery({
-    queryKey: ['exercises'],
-    queryFn: fetchExercises,
-  });
+  const { exercises, isLoading } = useFetchExercises();
 
   return (
     <div className="p-4">

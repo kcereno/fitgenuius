@@ -2,24 +2,16 @@
 
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { deleteExercise, fetchExercise } from '@/app/lib/actions';
-import { useQuery } from '@tanstack/react-query';
+import { deleteExercise } from '@/app/lib/actions';
 import { Button } from '@/components/ui/button';
 import EditExerciseForm from '@/components/EditExerciseForm/EditExerciseForm';
+import useFetchExercise from '@/hooks/useFetchExercise';
 
 const ExercisePage = () => {
   const { exerciseId } = useParams();
   const router = useRouter();
 
-  const {
-    data: exercise,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ['exercise', exerciseId],
-    queryFn: () => fetchExercise(exerciseId as string),
-    enabled: !!exerciseId,
-  });
+  const { exercise, isLoading, error } = useFetchExercise(exerciseId as string);
 
   if (isLoading) return <p>Loading exercise...</p>;
   if (error) return <p>Error fetching exercise</p>;
