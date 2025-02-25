@@ -21,3 +21,7 @@ export function capitalizeWords(text: string): string {
 export function dashToUnderscore(text: string): string {
   return text.replace(/-/g, '_'); // Replace all dashes with underscores
 }
+
+export function underscoreToDash(text: string): string {
+  return text.replace(/_/g, '-'); // Replace all underscores with dashes
+}

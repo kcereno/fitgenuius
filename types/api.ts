@@ -1,4 +1,5 @@
-export type ApiResponse = {
-  success: boolean;
+export type ApiResponse<T = unknown> = {
+  status: 'success' | 'fail' | 'error';
   message: string;
+  data?: T;
 };

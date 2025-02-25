@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 
 export const fetchExercises = async () => {
@@ -5,16 +6,13 @@ export const fetchExercises = async () => {
 
   const res = await fetch(url);
 
+  const { message, data: exercises } = (await res.json()) as ApiResponse;
+
   if (!res.ok) {
-    throw new Error('Failed to fetch exercises');
-  }
-  const { success, exercises } = await res.json();
-
-  if (!success || !exercises) {
-    throw new Error('Invalid API response: Missing exercise data');
+    throw new Error(message);
   }
 
-  return exercises;
+  return exercises as Exercise[];
 };
 
 export const fetchExercise = async (exerciseId: string) => {

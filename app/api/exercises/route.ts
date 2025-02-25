@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
+import { ApiResponse } from '@/types/api';
+import { Exercise } from '@/types/exercise';
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
@@ -10,15 +12,19 @@ export async function GET() {
       ? fs.readFileSync(filePath, 'utf-8')
       : '[]';
 
-    const exercises = JSON.parse(fileData);
+    const exercises = JSON.parse(fileData) as Exercise[];
 
-    return NextResponse.json({ success: true, exercises });
+    return NextResponse.json<ApiResponse<Exercise[]>>({
+      status: 'success',
+      message: 'Fetched all exercises successfully',
+      data: exercises,
+    });
   } catch (error) {
     console.error('GET ~ error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Error reading file' },
-      { status: 500 }
-    );
+    return NextResponse.json<ApiResponse>({
+      status: 'fail',
+      message: 'Unable to fetch all exercises',
+    });
   }
 }
 

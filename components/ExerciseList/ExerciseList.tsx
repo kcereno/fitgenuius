@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Exercise, underscoreToDash } from '@/types/exercise';
-
+import { Exercise } from '@/types/exercise';
 import Link from 'next/link';
+import { underscoreToDash } from '@/utils/formatters';
 
 const ExerciseList = ({ exercises }: { exercises: Exercise[] }) => {
   return (
