@@ -3,6 +3,7 @@ import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { dashToUnderscore } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
+import { ApiResponse } from '@/types/api';
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
@@ -24,13 +25,17 @@ export async function GET(
       (exercise: Exercise) => exercise.id === formattedExerciseId
     );
 
-    return NextResponse.json({ success: true, exercise });
+    return NextResponse.json<ApiResponse<Exercise>>({
+      status: 'success',
+      message: 'Exercise fetched successfully',
+      data: exercise,
+    });
   } catch (error) {
     console.error('GET ~ error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Unable to find exercise' },
-      { status: 500 }
-    );
+    return NextResponse.json<ApiResponse>({
+      status: 'error',
+      message: error as string,
+    });
   }
 }
 
@@ -67,13 +72,15 @@ export async function DELETE(
     // Write updated data back to the file
     fs.writeFileSync(filePath, JSON.stringify(updatedExercises, null, 2));
 
-    return NextResponse.json({ success: true, message: 'Exercise deleted' });
+    return NextResponse.json<ApiResponse>({
+      status: 'success',
+      message: 'Exercise deleted',
+    });
   } catch (error) {
-    console.error('DELETE ~ error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Unable to delete exercise' },
-      { status: 500 }
-    );
+    return NextResponse.json<ApiResponse>({
+      status: 'error',
+      message: error as string,
+    });
   }
 }
 

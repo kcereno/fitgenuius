@@ -22,8 +22,8 @@ export async function GET() {
   } catch (error) {
     console.error('GET ~ error:', error);
     return NextResponse.json<ApiResponse>({
-      status: 'fail',
-      message: 'Unable to fetch all exercises',
+      status: 'error',
+      message: error as string,
     });
   }
 }
@@ -45,12 +45,15 @@ export async function POST(req: NextRequest) {
     // Write back to the file
     fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
 
-    return NextResponse.json({ success: true, message: 'Exercise saved!' });
+    return NextResponse.json<ApiResponse>({
+      status: 'success',
+      message: 'Exercise saved!',
+    });
   } catch (error) {
     console.log(' POST ~ error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Error saving exercise.' },
-      { status: 500 }
-    );
+    return NextResponse.json<ApiResponse>({
+      status: 'error',
+      message: error as string,
+    });
   }
 }

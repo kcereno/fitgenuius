@@ -23,13 +23,9 @@ export const fetchExercise = async (exerciseId: string) => {
     throw new Error('Failed to fetch exercise');
   }
 
-  const { success, exercise } = await res.json();
+  const { data: exercise } = (await res.json()) as ApiResponse;
 
-  if (!success || !exercise) {
-    throw new Error('Invalid API response: Missing exercise data');
-  }
-
-  return exercise;
+  return exercise as Exercise;
 };
 
 export const deleteExercise = async (exerciseId: string) => {
