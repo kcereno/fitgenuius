@@ -12,28 +12,25 @@ import useEditExercise from '@/hooks/useEditExercise';
 import { normalizeToUnderscore, underscoreToDash } from '@/utils/formatters';
 
 interface EditExerciseFormProps {
-  initialExerciseFormData: Exercise;
+  initialExercise: Exercise;
 }
 
-const EditExerciseForm = ({
-  initialExerciseFormData,
-}: EditExerciseFormProps) => {
-  const [exerciseFormData, setExerciseFormData] = useState<Exercise>(
-    initialExerciseFormData
-  );
+const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
+  const [updatedExercise, setUpdatedExercise] =
+    useState<Exercise>(initialExercise);
 
   const { mutate: editExerciseMutation, loading, error } = useEditExercise();
 
   const handleSubmit = () => {
     const updatedId = normalizeToUnderscore(
-      exerciseFormData.name
+      updatedExercise.name
     ).toLocaleLowerCase();
 
     const newSlug = underscoreToDash(updatedId);
 
     editExerciseMutation({
-      exerciseId: initialExerciseFormData.id,
-      updatedExercise: { ...exerciseFormData, id: updatedId },
+      exerciseId: initialExercise.id,
+      updatedExercise: { ...updatedExercise, id: updatedId },
       redirectTo: `/exercises/${newSlug}`,
     });
   };
@@ -41,12 +38,7 @@ const EditExerciseForm = ({
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    const updatedExerciseFormData = {
-      ...exerciseFormData,
-      [name]: value,
-    };
-
-    setExerciseFormData(updatedExerciseFormData);
+    setUpdatedExercise({ ...updatedExercise, [name]: value });
   };
 
   const formTrigger = <Button>Edit</Button>;
@@ -71,7 +63,7 @@ const EditExerciseForm = ({
           id="name"
           name="name"
           onChange={handleTextChange}
-          value={exerciseFormData.name}
+          value={updatedExercise.name}
           className="col-span-3"
         />
       </div>

@@ -21,7 +21,7 @@ const ExercisePage = () => {
   if (isLoading) return <p>Loading exercise...</p>;
   if (error) return <p>Error fetching exercise</p>;
   if (!exercise) {
-    router.push('/exercises'); // ✅ Redirect if exercise is not found
+    router.push('/exercises');
     return null;
   }
 
@@ -33,7 +33,7 @@ const ExercisePage = () => {
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{exercise.name}</h1>
       <div className="flex gap-4 justify-center">
-        <EditExerciseForm initialExerciseFormData={exercise} />
+        <EditExerciseForm initialExercise={exercise} />
         <Button onClick={handleDelete}>Delete</Button>
       </div>
     </div>
