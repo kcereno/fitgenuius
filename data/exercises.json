@@ -4,11 +4,11 @@
     "name": "Squat"
   },
   {
-    "id": "test",
-    "name": "Test"
-  },
-  {
     "id": "kb_swing",
     "name": "Kb Swings"
+  },
+  {
+    "id": "dead_lfit",
+    "name": "Dead Lfit"
   }
 ]

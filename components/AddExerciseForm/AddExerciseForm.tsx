@@ -1,13 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Exercise } from '@/types/exercise';
-import { useMutationRequest } from '@/hooks/useMutationRequest';
-import { ApiResponse } from '@/types/api';
-import { addExercise } from './addExercise';
+
 import {
   capitalizeWords,
   normalizeToUnderscore,
@@ -15,6 +12,8 @@ import {
 } from '@/utils/formatters';
 import DialogForm from '../DialogForm/DialogForm';
 import { Button } from '../ui/button';
+
+import useAddExercise from '@/hooks/useAddExercise';
 
 const INITIAL_NEW_EXERCISE_VALUE = {
   id: '',
@@ -26,10 +25,7 @@ const AddExerciseForm = () => {
     INITIAL_NEW_EXERCISE_VALUE
   );
 
-  const { mutate, loading, error } = useMutationRequest<ApiResponse, Exercise>({
-    mutationFn: addExercise,
-    invalidateKey: 'exercises',
-  });
+  const { addExercise, loading, error } = useAddExercise();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +35,7 @@ const AddExerciseForm = () => {
 
     const sanitizedNewExercise = { ...newExercise, id, name: trimmedInput };
 
-    mutate(sanitizedNewExercise);
+    addExercise(sanitizedNewExercise);
     setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
   };
 
