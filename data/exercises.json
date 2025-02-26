@@ -1,14 +1,10 @@
 [
   {
-    "id": "squat",
-    "name": "Squat"
+    "id": "trapbar_dead_lift",
+    "name": "trapbar dead lift"
   },
   {
     "id": "kb_swing",
     "name": "Kb Swings"
-  },
-  {
-    "id": "dead_lfit",
-    "name": "Dead Lfit"
   }
 ]

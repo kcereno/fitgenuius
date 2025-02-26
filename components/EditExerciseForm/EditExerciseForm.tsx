@@ -6,9 +6,10 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Exercise } from '@/types/exercise';
-import { useMutationRequest } from '@/hooks/useMutationRequest';
-import { editExercise } from '@/app/lib/actions';
-import { ApiResponse } from '@/types/api';
+
+import useEditExercise from '@/hooks/useEditExercise';
+
+import { normalizeToUnderscore, underscoreToDash } from '@/utils/formatters';
 
 interface EditExerciseFormProps {
   initialExerciseFormData: Exercise;
@@ -21,19 +22,19 @@ const EditExerciseForm = ({
     initialExerciseFormData
   );
 
-  const { mutate, loading, error } = useMutationRequest<
-    ApiResponse,
-    { exerciseId: string; updatedExercise: Exercise }
-  >({
-    mutationFn: ({ exerciseId, updatedExercise }) =>
-      editExercise(exerciseId, updatedExercise),
-    invalidateKey: 'exercises',
-  });
+  const { mutate: editExerciseMutation, loading, error } = useEditExercise();
 
   const handleSubmit = () => {
-    mutate({
+    const updatedId = normalizeToUnderscore(
+      exerciseFormData.name
+    ).toLocaleLowerCase();
+
+    const newSlug = underscoreToDash(updatedId);
+
+    editExerciseMutation({
       exerciseId: initialExerciseFormData.id,
-      updatedExercise: exerciseFormData,
+      updatedExercise: { ...exerciseFormData, id: updatedId },
+      redirectTo: `/exercises/${newSlug}`,
     });
   };
 

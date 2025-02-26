@@ -73,8 +73,6 @@ export const editExercise = async (
     body: JSON.stringify(updatedExerciseData),
   });
 
-  console.log(await res);
-
   if (!res.ok) {
     throw new Error('Failed to update exercise');
   }
