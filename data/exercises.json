@@ -1,26 +1,14 @@
 [
   {
-    "id": "bench_press",
-    "name": "Incline bench"
-  },
-  {
     "id": "squat",
     "name": "Squat"
-  },
-  {
-    "id": "dead_lift",
-    "name": "Dead Lift"
   },
   {
     "id": "test",
     "name": "Test"
   },
   {
-    "id": "test_2",
-    "name": "Test 2"
-  },
-  {
     "id": "kb_swing",
-    "name": "Kb Swingz"
+    "name": "Kb Swings"
   }
 ]

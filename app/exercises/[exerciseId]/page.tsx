@@ -2,16 +2,17 @@
 
 import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { deleteExercise } from '@/app/lib/actions';
 import { Button } from '@/components/ui/button';
 import EditExerciseForm from '@/components/EditExerciseForm/EditExerciseForm';
 import useFetchExercise from '@/hooks/useFetchExercise';
+import useDeleteExercise from '@/hooks/useDeleteExercise';
 
 const ExercisePage = () => {
   const { exerciseId } = useParams();
   const router = useRouter();
 
   const { exercise, isLoading, error } = useFetchExercise(exerciseId as string);
+  const { mutate: deleteExerciseMutation } = useDeleteExercise();
 
   if (isLoading) return <p>Loading exercise...</p>;
   if (error) return <p>Error fetching exercise</p>;
@@ -21,10 +22,7 @@ const ExercisePage = () => {
   }
 
   const handleDelete = async () => {
-    const result = await deleteExercise(exercise.id);
-    if (result.success) {
-      router.push('/exercises');
-    }
+    deleteExerciseMutation(exerciseId as string);
   };
 
   return (
