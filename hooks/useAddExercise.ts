@@ -10,7 +10,7 @@ const useAddExercise = () => {
     },
     invalidateKey: 'exercises',
   });
-  return { addExercise: mutate, loading, error };
+  return { mutate, loading, error };
 };
 
 export default useAddExercise;

@@ -25,7 +25,7 @@ const AddExerciseForm = () => {
     INITIAL_NEW_EXERCISE_VALUE
   );
 
-  const { addExercise, loading, error } = useAddExercise();
+  const { mutate: addExercise, loading, error } = useAddExercise();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

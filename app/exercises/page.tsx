@@ -6,7 +6,7 @@ import ExerciseList from '../../components/ExerciseList/ExerciseList';
 import useFetchExercises from '@/hooks/useFetchExercises';
 
 const ExercisesPage = () => {
-  const { exercises, isLoading } = useFetchExercises();
+  const { data: exercises, isLoading } = useFetchExercises();
 
   return (
     <div className="p-4">

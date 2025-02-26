@@ -11,7 +11,11 @@ const ExercisePage = () => {
   const { exerciseId } = useParams();
   const router = useRouter();
 
-  const { exercise, isLoading, error } = useFetchExercise(exerciseId as string);
+  const {
+    data: exercise,
+    isLoading,
+    error,
+  } = useFetchExercise(exerciseId as string);
   const { mutate: deleteExerciseMutation } = useDeleteExercise();
 
   if (isLoading) return <p>Loading exercise...</p>;
