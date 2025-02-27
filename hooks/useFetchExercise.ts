@@ -1,8 +1,8 @@
 import { fetchExercise } from '@/app/lib/actions';
-import { useQuery } from '@tanstack/react-query';
+import { useQueryRequest } from './useQueryRequest';
 
 const useFetchExercise = (exerciseId: string) => {
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQueryRequest({
     queryKey: ['exercise', exerciseId],
     queryFn: () => fetchExercise(exerciseId as string),
     enabled: !!exerciseId,
