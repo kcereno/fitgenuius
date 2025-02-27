@@ -18,16 +18,15 @@ export const addExercise = async (
 
 export const fetchExercises = async () => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises`;
-
   const res = await fetch(url);
+  const response = (await res.json()) as ApiResponse<Exercise[]>; // Parse JSON request
 
-  const { message, data: exercises } = (await res.json()) as ApiResponse;
-
+  // If the request fails, reject with the API response
   if (!res.ok) {
-    throw new Error(message);
+    return Promise.reject(response); // ✅ Lets React Query handle errors
   }
 
-  return exercises as Exercise[];
+  return response.data;
 };
 
 export const fetchExercise = async (exerciseId: string) => {

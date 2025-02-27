@@ -4,27 +4,40 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 
+// Define the path to the exercises.json file in the `data/` folder
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET() {
   try {
+    // Check if the file exists and read its contents; otherwise, use an empty array
     const fileData = fs.existsSync(filePath)
       ? fs.readFileSync(filePath, 'utf-8')
       : '[]';
 
-    const exercises = JSON.parse(fileData) as Exercise[];
+    // Parse the file content into a JavaScript array
+    const exercises: Exercise[] = JSON.parse(fileData);
 
-    return NextResponse.json<ApiResponse<Exercise[]>>({
-      status: 'success',
-      message: 'Fetched all exercises successfully',
-      data: exercises,
-    });
+    // Return a JSON response with status "success" and the list of exercises
+    return NextResponse.json<ApiResponse<Exercise[]>>(
+      {
+        status: 'success',
+        message: 'Fetched all exercises successfully',
+        data: exercises,
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('GET ~ error:', error);
-    return NextResponse.json<ApiResponse>({
-      status: 'error',
-      message: error as string,
-    });
+    console.error('GET /api/exercises error:', error); // Log the error for debugging
+
+    // Return an error response with status "error" and a descriptive message
+    return NextResponse.json<ApiResponse>(
+      {
+        status: 'error',
+        message:
+          error instanceof Error ? error.message : 'Failed to fetch exercises',
+      },
+      { status: 500 }
+    );
   }
 }
 
