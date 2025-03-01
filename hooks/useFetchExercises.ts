@@ -1,10 +1,15 @@
 import { fetchExercises } from '@/app/lib/actions';
+import { Exercise } from '@/types/exercise';
+import { useQuery } from '@tanstack/react-query';
 
-import { useQueryRequest } from './useQueryRequest';
-
-const useFetchExercises = () =>
-  useQueryRequest({
+const useFetchExercises = () => {
+  const { data, isLoading, error } = useQuery<Exercise[]>({
     queryKey: ['exercises'],
     queryFn: fetchExercises,
+    retry: 2,
   });
+
+  return { exercises: data, isLoading, error };
+};
+
 export default useFetchExercises;

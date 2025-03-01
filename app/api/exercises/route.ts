@@ -3,21 +3,14 @@ import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
+import { readJsonFile } from '@/lib/json';
 
-// Define the path to the exercises.json file in the `data/` folder
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET() {
   try {
-    // Check if the file exists and read its contents; otherwise, use an empty array
-    const fileData = fs.existsSync(filePath)
-      ? fs.readFileSync(filePath, 'utf-8')
-      : '[]';
+    const exercises = readJsonFile<Exercise[]>(filePath);
 
-    // Parse the file content into a JavaScript array
-    const exercises: Exercise[] = JSON.parse(fileData);
-
-    // Return a JSON response with status "success" and the list of exercises
     return NextResponse.json<ApiResponse<Exercise[]>>(
       {
         status: 'success',
@@ -27,14 +20,15 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    console.error('GET /api/exercises error:', error); // Log the error for debugging
+    console.error('GET /api/exercises error:', error);
 
-    // Return an error response with status "error" and a descriptive message
     return NextResponse.json<ApiResponse>(
       {
         status: 'error',
         message:
-          error instanceof Error ? error.message : 'Failed to fetch exercises',
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred while fetching exercises.',
       },
       { status: 500 }
     );

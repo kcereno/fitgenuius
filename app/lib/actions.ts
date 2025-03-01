@@ -1,29 +1,17 @@
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 
-export const addExercise = async (
-  newExercise: Exercise
-): Promise<ApiResponse> => {
-  const res = await fetch('/api/exercises', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(newExercise),
-  });
-  if (!res.ok) {
-    throw new Error('Failed to add exercise');
-  }
-
-  return (await res.json()) as ApiResponse;
-};
-
 export const fetchExercises = async () => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises`;
-  const res = await fetch(url);
-  const response = (await res.json()) as ApiResponse<Exercise[]>; // Parse JSON request
+  const res = await fetch(url, { cache: 'no-store' });
 
-  // If the request fails, reject with the API response
-  if (!res.ok) {
-    return Promise.reject(response); // ✅ Lets React Query handle errors
+  const response = (await res.json()) as ApiResponse<Exercise[]>;
+
+  if (!res.ok || response.status !== 'success' || !response.data) {
+    return Promise.reject({
+      status: response.status,
+      message: response.message,
+    });
   }
 
   return response.data;
@@ -40,6 +28,21 @@ export const fetchExercise = async (exerciseId: string) => {
   const { data: exercise } = (await res.json()) as ApiResponse;
 
   return exercise as Exercise;
+};
+
+export const addExercise = async (
+  newExercise: Exercise
+): Promise<ApiResponse> => {
+  const res = await fetch('/api/exercises', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newExercise),
+  });
+  if (!res.ok) {
+    throw new Error('Failed to add exercise');
+  }
+
+  return (await res.json()) as ApiResponse;
 };
 
 export const deleteExercise = async (exerciseId: string) => {
