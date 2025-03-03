@@ -73,35 +73,19 @@ export async function DELETE(req: NextRequest, { params }: ExerciseParams) {
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  context: { params: { exerciseId: string } }
-) {
-  const { exerciseId } = context.params;
+export async function PUT(req: NextRequest, { params }: ExerciseParams) {
+  const { exerciseId } = await params;
   const formattedId = dashToUnderscore(exerciseId);
 
   try {
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json(
-        { success: false, message: 'Exercise data file not found' },
-        { status: 500 }
-      );
-    }
-
-    const fileData = fs.readFileSync(filePath, 'utf-8');
-    const exercises: Exercise[] = JSON.parse(fileData);
+    const exercises = readJsonFile<Exercise[]>(filePath);
 
     // Find and update the exercise
     const exerciseIndex = exercises.findIndex((e) => e.id === formattedId);
-    if (exerciseIndex === -1) {
-      return NextResponse.json(
-        { success: false, message: 'Exercise not found' },
-        { status: 404 }
-      );
-    }
 
     // Get updated data from request
     const updatedExercise = await req.json();
+    console.log(' PUT ~ updatedExercise:', updatedExercise);
 
     // Update the exercise in the array
     exercises[exerciseIndex] = {
@@ -112,14 +96,14 @@ export async function PUT(
     // Write back to file
     fs.writeFileSync(filePath, JSON.stringify(exercises, null, 2));
 
-    return NextResponse.json({
-      success: true,
-      exercise: exercises[exerciseIndex],
+    return NextResponse.json<ApiResponse>({
+      status: 'success',
+      message: 'Exercise updated successfully',
     });
   } catch (error) {
     console.error('PUT ~ error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to update exercise' },
+    return NextResponse.json<ApiResponse>(
+      { status: 'fail', message: 'Failed to update exercise' },
       { status: 500 }
     );
   }
