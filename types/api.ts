@@ -3,3 +3,9 @@ export type ApiResponse<T = unknown> = {
   message: string;
   data?: T;
 };
+
+export type ExerciseParams = {
+  params: {
+    exerciseId: string;
+  };
+};

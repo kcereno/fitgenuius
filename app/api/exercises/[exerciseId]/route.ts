@@ -3,15 +3,12 @@ import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { dashToUnderscore } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
-import { ApiResponse } from '@/types/api';
+import { ApiResponse, ExerciseParams } from '@/types/api';
 import { readJsonFile } from '@/lib/json';
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { exerciseId: string } }
-) {
+export async function GET(req: NextRequest, { params }: ExerciseParams) {
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
