@@ -47,35 +47,16 @@ export async function GET(req: NextRequest, { params }: ExerciseParams) {
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { exerciseId: string } }
-) {
-  const { exerciseId } = context.params;
+export async function DELETE(req: NextRequest, { params }: ExerciseParams) {
+  const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
   try {
-    if (!fs.existsSync(filePath)) {
-      return NextResponse.json(
-        { success: false, message: 'Exercise data file not found' },
-        { status: 500 }
-      );
-    }
+    const exercises = readJsonFile<Exercise[]>(filePath);
 
-    const fileData = fs.readFileSync(filePath, 'utf-8');
-    const exercises: Exercise[] = JSON.parse(fileData);
-
-    // Find and remove the exercise
     const updatedExercises = exercises.filter(
       (e) => e.id !== formattedExerciseId
     );
-
-    if (updatedExercises.length === exercises.length) {
-      return NextResponse.json(
-        { success: false, message: 'Exercise not found' },
-        { status: 404 }
-      );
-    }
 
     // Write updated data back to the file
     fs.writeFileSync(filePath, JSON.stringify(updatedExercises, null, 2));
