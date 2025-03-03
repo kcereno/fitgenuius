@@ -4,26 +4,35 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dashToUnderscore } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
 import { ApiResponse } from '@/types/api';
+import { readJsonFile } from '@/lib/json';
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET(
   req: NextRequest,
-  context: { params: { exerciseId: string } }
+  { params }: { params: { exerciseId: string } }
 ) {
-  const { exerciseId } = context.params;
+  const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
   try {
-    const fileData = fs.existsSync(filePath)
-      ? fs.readFileSync(filePath, 'utf-8')
-      : '[]';
-
-    const exercises = JSON.parse(fileData);
+    const exercises = readJsonFile<Exercise[]>(filePath);
 
     const exercise = exercises.find(
       (exercise: Exercise) => exercise.id === formattedExerciseId
     );
+
+    if (!exercise) {
+      return NextResponse.json<ApiResponse>(
+        {
+          status: 'error',
+          message: 'Exercise does not exist',
+        },
+        {
+          status: 404,
+        }
+      );
+    }
 
     return NextResponse.json<ApiResponse<Exercise>>({
       status: 'success',
@@ -32,9 +41,11 @@ export async function GET(
     });
   } catch (error) {
     console.error('GET ~ error:', error);
+
     return NextResponse.json<ApiResponse>({
       status: 'error',
-      message: error as string,
+      message:
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     });
   }
 }
