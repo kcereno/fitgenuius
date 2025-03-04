@@ -10,7 +10,7 @@ const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { exerciseId: string } }
+  { params }: { params: Promise<{ exerciseId: string }> }
 ) {
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
@@ -52,7 +52,7 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { exerciseId: string } }
+  { params }: { params: Promise<{ exerciseId: string }> }
 ) {
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
@@ -81,7 +81,7 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { exerciseId: string } }
+  { params }: { params: Promise<{ exerciseId: string }> }
 ) {
   const { exerciseId } = await params;
   const formattedId = dashToUnderscore(exerciseId);
