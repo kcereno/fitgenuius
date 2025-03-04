@@ -3,12 +3,15 @@ import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { dashToUnderscore } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
-import { ApiResponse, ExerciseParams } from '@/types/api';
+import { ApiResponse } from '@/types/api';
 import { readJsonFile } from '@/lib/json';
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
-export async function GET(req: NextRequest, { params }: ExerciseParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { exerciseId: string } }
+) {
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
@@ -47,7 +50,10 @@ export async function GET(req: NextRequest, { params }: ExerciseParams) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: ExerciseParams) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { exerciseId: string } }
+) {
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
@@ -73,7 +79,10 @@ export async function DELETE(req: NextRequest, { params }: ExerciseParams) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: ExerciseParams) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { exerciseId: string } }
+) {
   const { exerciseId } = await params;
   const formattedId = dashToUnderscore(exerciseId);
 
