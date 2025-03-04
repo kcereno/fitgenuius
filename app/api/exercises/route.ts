@@ -4,12 +4,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 import { readJsonFile } from '@/lib/json';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET() {
   try {
-    const exercises = readJsonFile<Exercise[]>(filePath);
+    const exercises = (await prisma.exercise.findMany()) as Exercise[];
+    console.log(' GET ~ exercises:', exercises);
 
     return NextResponse.json<ApiResponse<Exercise[]>>(
       {
