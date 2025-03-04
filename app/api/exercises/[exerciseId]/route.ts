@@ -42,70 +42,75 @@ export async function GET(
   }
 }
 
-// export async function DELETE(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ exerciseId: string }> }
-// ) {
-//   const { exerciseId } = await params;
-//   const formattedExerciseId = dashToUnderscore(exerciseId);
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ exerciseId: string }> }
+) {
+  const { exerciseId } = await params;
+  const formattedExerciseId = dashToUnderscore(exerciseId);
 
-//   try {
-//     // const exercises = readJsonFile<Exercise[]>(filePath);
+  try {
+    const exercise = await prisma.exercise.findUnique({
+      where: { id: formattedExerciseId },
+    });
 
-//     const updatedExercises = exercises.filter(
-//       (e) => e.id !== formattedExerciseId
-//     );
+    if (!exercise) {
+      return NextResponse.json(
+        { status: 'error', message: 'Exercise not found' },
+        { status: 404 }
+      );
+    }
 
-//     // Write updated data back to the file
-//     fs.writeFileSync(filePath, JSON.stringify(updatedExercises, null, 2));
+    await prisma.exercise.delete({
+      where: { id: formattedExerciseId },
+    });
 
-//     return NextResponse.json<ApiResponse>({
-//       status: 'success',
-//       message: 'Exercise deleted',
-//     });
-//   } catch (error) {
-//     return NextResponse.json<ApiResponse>({
-//       status: 'error',
-//       message: error as string,
-//     });
-//   }
-// }
+    return NextResponse.json<ApiResponse>({
+      status: 'success',
+      message: 'Exercise deleted',
+    });
+  } catch (error) {
+    return NextResponse.json<ApiResponse>({
+      status: 'error',
+      message: error as string,
+    });
+  }
+}
 
-// export async function PUT(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ exerciseId: string }> }
-// ) {
-//   const { exerciseId } = await params;
-//   const formattedId = dashToUnderscore(exerciseId);
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ exerciseId: string }> }
+) {
+  const { exerciseId } = await params;
+  const formattedExerciseId = dashToUnderscore(exerciseId);
+  const updatedExercise = await req.json();
 
-//   try {
-//     const exercises = readJsonFile<Exercise[]>(filePath);
+  try {
+    const exercise = await prisma.exercise.findUnique({
+      where: { id: formattedExerciseId },
+    });
 
-//     // Find and update the exercise
-//     const exerciseIndex = exercises.findIndex((e) => e.id === formattedId);
+    if (!exercise) {
+      return NextResponse.json(
+        { status: 'error', message: 'Exercise not found' },
+        { status: 404 }
+      );
+    }
 
-//     // Get updated data from request
-//     const updatedExercise = await req.json();
-//     console.log(' PUT ~ updatedExercise:', updatedExercise);
+    await prisma.exercise.update({
+      where: { id: formattedExerciseId },
+      data: updatedExercise,
+    });
 
-//     // Update the exercise in the array
-//     exercises[exerciseIndex] = {
-//       ...exercises[exerciseIndex],
-//       ...updatedExercise,
-//     };
-
-//     // Write back to file
-//     fs.writeFileSync(filePath, JSON.stringify(exercises, null, 2));
-
-//     return NextResponse.json<ApiResponse>({
-//       status: 'success',
-//       message: 'Exercise updated successfully',
-//     });
-//   } catch (error) {
-//     console.error('PUT ~ error:', error);
-//     return NextResponse.json<ApiResponse>(
-//       { status: 'fail', message: 'Failed to update exercise' },
-//       { status: 500 }
-//     );
-//   }
-// }
+    return NextResponse.json<ApiResponse>({
+      status: 'success',
+      message: 'Exercise updated successfully',
+    });
+  } catch (error) {
+    console.error('PUT ~ error:', error);
+    return NextResponse.json<ApiResponse>(
+      { status: 'fail', message: 'Failed to update exercise' },
+      { status: 500 }
+    );
+  }
+}
