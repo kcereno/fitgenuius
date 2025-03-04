@@ -5,8 +5,9 @@ import { dashToUnderscore } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
 import { ApiResponse } from '@/types/api';
 import { readJsonFile } from '@/lib/json';
+import { PrismaClient } from '@prisma/client';
 
-const filePath = path.join(process.cwd(), 'data', 'exercises.json');
+const prisma = new PrismaClient();
 
 export async function GET(
   req: NextRequest,
@@ -16,21 +17,14 @@ export async function GET(
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
   try {
-    const exercises = readJsonFile<Exercise[]>(filePath);
-
-    const exercise = exercises.find(
-      (exercise: Exercise) => exercise.id === formattedExerciseId
-    );
+    const exercise = await prisma.exercise.findUnique({
+      where: { id: formattedExerciseId },
+    });
 
     if (!exercise) {
-      return NextResponse.json<ApiResponse>(
-        {
-          status: 'error',
-          message: 'Exercise does not exist',
-        },
-        {
-          status: 404,
-        }
+      return NextResponse.json(
+        { status: 'error', message: 'Exercise not found' },
+        { status: 404 }
       );
     }
 
@@ -58,7 +52,7 @@ export async function DELETE(
   const formattedExerciseId = dashToUnderscore(exerciseId);
 
   try {
-    const exercises = readJsonFile<Exercise[]>(filePath);
+    // const exercises = readJsonFile<Exercise[]>(filePath);
 
     const updatedExercises = exercises.filter(
       (e) => e.id !== formattedExerciseId
