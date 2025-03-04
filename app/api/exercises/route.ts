@@ -1,13 +1,9 @@
-import fs from 'fs';
-import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-
-const filePath = path.join(process.cwd(), 'data', 'exercises.json');
 
 export async function GET() {
   try {
@@ -41,28 +37,20 @@ export async function POST(req: NextRequest) {
   try {
     const exercise = await req.json();
 
-    // Read Existing Data
-    let existingData = [];
-    if (fs.existsSync(filePath)) {
-      const fileData = fs.readFileSync(filePath, 'utf-8');
-      existingData = fileData ? JSON.parse(fileData) : [];
-    }
-
-    // Append new entry
-    existingData.push(exercise);
-
-    // Write back to the file
-    fs.writeFileSync(filePath, JSON.stringify(existingData, null, 2));
+    await prisma.exercise.create({
+      data: exercise,
+    });
 
     return NextResponse.json<ApiResponse>({
       status: 'success',
-      message: 'Exercise saved!',
+      message: 'Exercised added successfully!',
     });
   } catch (error) {
     console.log(' POST ~ error:', error);
     return NextResponse.json<ApiResponse>({
       status: 'error',
-      message: error as string,
+      message:
+        error instanceof Error ? error.message : 'An unexpected error occured',
     });
   }
 }

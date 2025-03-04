@@ -1,10 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { dashToUnderscore } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
 import { ApiResponse } from '@/types/api';
-import { readJsonFile } from '@/lib/json';
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -44,70 +42,70 @@ export async function GET(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ exerciseId: string }> }
-) {
-  const { exerciseId } = await params;
-  const formattedExerciseId = dashToUnderscore(exerciseId);
+// export async function DELETE(
+//   req: NextRequest,
+//   { params }: { params: Promise<{ exerciseId: string }> }
+// ) {
+//   const { exerciseId } = await params;
+//   const formattedExerciseId = dashToUnderscore(exerciseId);
 
-  try {
-    // const exercises = readJsonFile<Exercise[]>(filePath);
+//   try {
+//     // const exercises = readJsonFile<Exercise[]>(filePath);
 
-    const updatedExercises = exercises.filter(
-      (e) => e.id !== formattedExerciseId
-    );
+//     const updatedExercises = exercises.filter(
+//       (e) => e.id !== formattedExerciseId
+//     );
 
-    // Write updated data back to the file
-    fs.writeFileSync(filePath, JSON.stringify(updatedExercises, null, 2));
+//     // Write updated data back to the file
+//     fs.writeFileSync(filePath, JSON.stringify(updatedExercises, null, 2));
 
-    return NextResponse.json<ApiResponse>({
-      status: 'success',
-      message: 'Exercise deleted',
-    });
-  } catch (error) {
-    return NextResponse.json<ApiResponse>({
-      status: 'error',
-      message: error as string,
-    });
-  }
-}
+//     return NextResponse.json<ApiResponse>({
+//       status: 'success',
+//       message: 'Exercise deleted',
+//     });
+//   } catch (error) {
+//     return NextResponse.json<ApiResponse>({
+//       status: 'error',
+//       message: error as string,
+//     });
+//   }
+// }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ exerciseId: string }> }
-) {
-  const { exerciseId } = await params;
-  const formattedId = dashToUnderscore(exerciseId);
+// export async function PUT(
+//   req: NextRequest,
+//   { params }: { params: Promise<{ exerciseId: string }> }
+// ) {
+//   const { exerciseId } = await params;
+//   const formattedId = dashToUnderscore(exerciseId);
 
-  try {
-    const exercises = readJsonFile<Exercise[]>(filePath);
+//   try {
+//     const exercises = readJsonFile<Exercise[]>(filePath);
 
-    // Find and update the exercise
-    const exerciseIndex = exercises.findIndex((e) => e.id === formattedId);
+//     // Find and update the exercise
+//     const exerciseIndex = exercises.findIndex((e) => e.id === formattedId);
 
-    // Get updated data from request
-    const updatedExercise = await req.json();
-    console.log(' PUT ~ updatedExercise:', updatedExercise);
+//     // Get updated data from request
+//     const updatedExercise = await req.json();
+//     console.log(' PUT ~ updatedExercise:', updatedExercise);
 
-    // Update the exercise in the array
-    exercises[exerciseIndex] = {
-      ...exercises[exerciseIndex],
-      ...updatedExercise,
-    };
+//     // Update the exercise in the array
+//     exercises[exerciseIndex] = {
+//       ...exercises[exerciseIndex],
+//       ...updatedExercise,
+//     };
 
-    // Write back to file
-    fs.writeFileSync(filePath, JSON.stringify(exercises, null, 2));
+//     // Write back to file
+//     fs.writeFileSync(filePath, JSON.stringify(exercises, null, 2));
 
-    return NextResponse.json<ApiResponse>({
-      status: 'success',
-      message: 'Exercise updated successfully',
-    });
-  } catch (error) {
-    console.error('PUT ~ error:', error);
-    return NextResponse.json<ApiResponse>(
-      { status: 'fail', message: 'Failed to update exercise' },
-      { status: 500 }
-    );
-  }
-}
+//     return NextResponse.json<ApiResponse>({
+//       status: 'success',
+//       message: 'Exercise updated successfully',
+//     });
+//   } catch (error) {
+//     console.error('PUT ~ error:', error);
+//     return NextResponse.json<ApiResponse>(
+//       { status: 'fail', message: 'Failed to update exercise' },
+//       { status: 500 }
+//     );
+//   }
+// }
