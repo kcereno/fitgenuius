@@ -22,7 +22,10 @@ export const fetchExercise = async (exerciseId: string) => {
   const res = await fetch(url);
 
   if (!res.ok) {
-    throw new Error('Failed to fetch exercise');
+    const errorBody = await res.json();
+    const errorMessage =
+      errorBody?.message || `Error fetching exercise (status: ${res.status})`;
+    throw new Error(errorMessage);
   }
 
   const { data: exercise } = (await res.json()) as ApiResponse;

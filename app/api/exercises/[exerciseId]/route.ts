@@ -34,11 +34,16 @@ export async function GET(
   } catch (error) {
     console.error('GET ~ error:', error);
 
-    return NextResponse.json<ApiResponse>({
-      status: 'error',
-      message:
-        error instanceof Error ? error.message : 'An unexpected error occurred',
-    });
+    return NextResponse.json<ApiResponse>(
+      {
+        status: 'error',
+        message:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+      },
+      { status: 500 }
+    );
   }
 }
 
