@@ -4,13 +4,14 @@ import { useMutationRequest } from './useMutationRequest';
 import { Exercise } from '@/types/exercise';
 
 const useAddExercise = () => {
-  const { mutate, loading, error } = useMutationRequest({
+  const { mutateAsync, loading, error, isSuccess } = useMutationRequest({
     mutationFn: async (newExercise: Exercise) => {
-      await addExercise(newExercise);
+      return await addExercise(newExercise);
     },
     invalidateKey: 'exercises',
   });
-  return { mutate, loading, error };
+
+  return { mutateAsync, loading, error, isSuccess };
 };
 
 export default useAddExercise;

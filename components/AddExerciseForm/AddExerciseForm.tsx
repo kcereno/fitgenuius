@@ -21,22 +21,26 @@ const INITIAL_NEW_EXERCISE_VALUE = {
 } as Exercise;
 
 const AddExerciseForm = () => {
+  const [open, setOpen] = useState(false);
   const [newExercise, setNewExercise] = useState<Exercise>(
     INITIAL_NEW_EXERCISE_VALUE
   );
 
-  const { mutate: addExercise, loading, error } = useAddExercise();
+  const { mutateAsync: addExercise, loading } = useAddExercise();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const trimmedInput = capitalizeWords(sanitizeInput(newExercise.name));
     const id = normalizeToUnderscore(trimmedInput).toLocaleLowerCase();
-
     const sanitizedNewExercise = { ...newExercise, id, name: trimmedInput };
 
-    addExercise(sanitizedNewExercise);
-    setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
+    try {
+      await addExercise(sanitizedNewExercise);
+      setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,37 +54,43 @@ const AddExerciseForm = () => {
     setNewExercise(updatedNewExercise);
   };
 
-  const formTrigger = (
-    <Button className="fixed bottom-20 left-1/2 -translate-x-1/2">
-      Add Exercise
-    </Button>
-  );
+  const handleAddExerciseButtonClick = () => {
+    setOpen(true);
+  };
 
   return (
-    <DialogForm
-      trigger={formTrigger}
-      title="New Exercise Form"
-      description="Add Exercise Details"
-      onSubmit={handleSubmit}
-      loading={loading}
-      error={error}
-    >
-      <div className="grid grid-cols-4 items-center gap-4">
-        <Label
-          htmlFor="name"
-          className="text-right"
-        >
-          Exercise
-        </Label>
-        <Input
-          id="name"
-          name="name"
-          onChange={handleTextChange}
-          value={newExercise.name}
-          className="col-span-3"
-        />
-      </div>
-    </DialogForm>
+    <>
+      <Button
+        className="fixed bottom-20 left-1/2 -translate-x-1/2"
+        onClick={handleAddExerciseButtonClick}
+      >
+        Add Exercise
+      </Button>
+      <DialogForm
+        open={open}
+        setOpen={setOpen}
+        title="New Exercise Form"
+        description="Add Exercise Details"
+        onSubmit={handleSubmit}
+        loading={loading}
+      >
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label
+            htmlFor="name"
+            className="text-right"
+          >
+            Exercise
+          </Label>
+          <Input
+            id="name"
+            name="name"
+            onChange={handleTextChange}
+            value={newExercise.name}
+            className="col-span-3"
+          />
+        </div>
+      </DialogForm>
+    </>
   );
 };
 

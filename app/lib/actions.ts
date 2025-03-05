@@ -1,6 +1,7 @@
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 
+// Fetch
 export const fetchExercises = async () => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises`;
   const res = await fetch(url, { cache: 'no-store' });
@@ -33,6 +34,7 @@ export const fetchExercise = async (exerciseId: string) => {
   return exercise as Exercise;
 };
 
+// Add
 export const addExercise = async (
   newExercise: Exercise
 ): Promise<ApiResponse> => {
@@ -41,13 +43,17 @@ export const addExercise = async (
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(newExercise),
   });
+
+  const response = (await res.json()) as ApiResponse;
+
   if (!res.ok) {
-    throw new Error('Failed to add exercise');
+    throw new Error(response.message);
   }
 
-  return (await res.json()) as ApiResponse;
+  return response;
 };
 
+// Delete
 export const deleteExercise = async (exerciseId: string) => {
   console.log('edit Exercise Triggered');
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
@@ -66,6 +72,7 @@ export const deleteExercise = async (exerciseId: string) => {
   return await res.json();
 };
 
+// Edit
 export const editExercise = async (
   exerciseId: string,
   updatedExerciseData: Exercise

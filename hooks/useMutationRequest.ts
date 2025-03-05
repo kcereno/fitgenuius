@@ -39,5 +39,11 @@ export const useMutationRequest = <TData, TVariables>({
     },
   });
 
-  return { mutate: mutation.mutate, loading, error };
+  return {
+    mutate: mutation.mutate,
+    mutateAsync: mutation.mutateAsync,
+    isSuccess: mutation.isSuccess, // ✅ Now exposing isSuccess
+    loading,
+    error,
+  };
 };

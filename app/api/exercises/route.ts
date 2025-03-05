@@ -35,22 +35,43 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const exercise = await req.json();
+    // Extract new exercise
+    const newExercise = await req.json();
 
+    const exerciseExists = await prisma.exercise.findFirst({
+      where: { id: newExercise.id },
+    });
+
+    // Check if new exercise exists in database. Return error if so
+    if (exerciseExists)
+      return NextResponse.json<ApiResponse>(
+        {
+          status: 'fail',
+          message: 'Exercise already exists in database',
+        },
+        {
+          status: 409,
+        }
+      );
+
+    // Add new exercise to database. Return success response
     await prisma.exercise.create({
-      data: exercise,
+      data: newExercise,
     });
 
-    return NextResponse.json<ApiResponse>({
-      status: 'success',
-      message: 'Exercised added successfully!',
-    });
+    return NextResponse.json<ApiResponse>(
+      {
+        status: 'success',
+        message: 'Exercised added successfully!',
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.log(' POST ~ error:', error);
     return NextResponse.json<ApiResponse>({
       status: 'error',
       message:
-        error instanceof Error ? error.message : 'An unexpected error occured',
+        error instanceof Error ? error.message : 'An unexpected error occurred',
     });
   }
 }
