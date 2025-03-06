@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
     const exercises = (await prisma.exercise.findMany()) as Exercise[];
 
-    return NextResponse.json<ApiResponse<Exercise[]>>(
+    console.log('Fetched exercises:', exercises); // Debug log
+
+    return NextResponse.json<ApiResponse>(
       {
         status: 'success',
-        message: 'Fetched all exercises successfully',
-        data: exercises,
-      },
+        data: exercises ?? [],
+        message: 'Exercises fetches successfully',
+      }, // Ensures data is always an array
       { status: 200 }
     );
   } catch (error) {
