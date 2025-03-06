@@ -88,17 +88,19 @@ export async function PUT(
 ) {
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
-  const updatedExercise = await req.json();
+  const updatedExercise = (await req.json()) as Exercise;
+  console.log(' updatedExercise:', updatedExercise);
 
   try {
-    const exercise = await prisma.exercise.findUnique({
-      where: { id: formattedExerciseId },
+    const exerciseExists = await prisma.exercise.findFirst({
+      where: { id: updatedExercise.id },
     });
+    console.log(' exerciseExists:', exerciseExists);
 
-    if (!exercise) {
-      return NextResponse.json(
-        { status: 'error', message: 'Exercise not found' },
-        { status: 404 }
+    if (exerciseExists) {
+      return NextResponse.json<ApiResponse>(
+        { status: 'fail', message: 'Exercise already exists in database' },
+        { status: 400 }
       );
     }
 

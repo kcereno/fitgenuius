@@ -28,7 +28,7 @@ const AddExerciseForm = () => {
 
   const { mutateAsync: addExercise, loading } = useAddExercise();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     const trimmedInput = capitalizeWords(sanitizeInput(newExercise.name));

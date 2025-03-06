@@ -76,7 +76,7 @@ export const deleteExercise = async (exerciseId: string) => {
 export const editExercise = async (
   exerciseId: string,
   updatedExerciseData: Exercise
-) => {
+): Promise<ApiResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
 
   const res = await fetch(url, {
@@ -85,9 +85,11 @@ export const editExercise = async (
     body: JSON.stringify(updatedExerciseData),
   });
 
+  const response = (await res.json()) as ApiResponse;
+
   if (!res.ok) {
-    throw new Error('Failed to update exercise');
+    throw new Error(response.message);
   }
 
-  return res.json();
+  return response;
 };

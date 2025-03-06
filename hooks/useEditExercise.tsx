@@ -13,7 +13,7 @@ interface EditExerciseVariables {
 const useEditExercise = () => {
   const router = useRouter();
 
-  const { mutate, loading, error } = useMutationRequest<
+  const { mutateAsync, loading, error } = useMutationRequest<
     ApiResponse,
     EditExerciseVariables
   >({
@@ -27,7 +27,7 @@ const useEditExercise = () => {
     },
   });
 
-  return { mutate, loading, error };
+  return { mutateAsync, loading, error };
 };
 
 export default useEditExercise;
