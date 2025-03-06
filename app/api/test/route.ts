@@ -14,7 +14,10 @@ export async function GET() {
   } catch (error) {
     console.error('Database connection error:', error);
     return NextResponse.json(
-      { status: 'error', message: error.message },
+      {
+        status: 'error',
+        message: error instanceof Error ? error.message : 'An error occured',
+      },
       { status: 500 }
     );
   } finally {
