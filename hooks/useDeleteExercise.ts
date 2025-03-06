@@ -1,7 +1,7 @@
 import { useMutationRequest } from './useMutationRequest';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { deleteExercise } from '@/app/lib/actions';
+import { deleteExercise } from '@/lib/exercise-actions';
 
 const useDeleteExercise = () => {
   const queryClient = useQueryClient();

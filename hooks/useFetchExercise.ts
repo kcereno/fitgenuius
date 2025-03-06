@@ -1,4 +1,4 @@
-import { fetchExercise } from '@/app/lib/actions';
+import { fetchExercise } from '@/lib/exercise-actions';
 import { useQueryRequest } from './useQueryRequest';
 
 const useFetchExercise = (exerciseId: string) => {

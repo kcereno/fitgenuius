@@ -65,11 +65,13 @@ export const deleteExercise = async (exerciseId: string) => {
     },
   });
 
+  const response = (await res.json()) as ApiResponse;
+
   if (!res.ok) {
-    throw new Error(`Failed to delete exercise: ${res.statusText}`);
+    throw new Error(response.message);
   }
 
-  return await res.json();
+  return response;
 };
 
 // Edit

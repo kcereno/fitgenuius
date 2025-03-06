@@ -1,4 +1,4 @@
-import { fetchExercises } from '@/app/lib/actions';
+import { fetchExercises } from '@/lib/exercise-actions';
 import { Exercise } from '@/types/exercise';
 import { useQuery } from '@tanstack/react-query';
 

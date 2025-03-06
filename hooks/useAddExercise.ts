@@ -1,4 +1,4 @@
-import { addExercise } from '@/app/lib/actions';
+import { addExercise } from '@/lib/exercise-actions';
 
 import { useMutationRequest } from './useMutationRequest';
 import { Exercise } from '@/types/exercise';

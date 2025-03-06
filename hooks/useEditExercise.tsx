@@ -1,7 +1,7 @@
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
 import { useMutationRequest } from './useMutationRequest';
-import { editExercise } from '@/app/lib/actions';
+import { editExercise } from '@/lib/exercise-actions';
 import { useRouter } from 'next/navigation';
 
 interface EditExerciseVariables {
