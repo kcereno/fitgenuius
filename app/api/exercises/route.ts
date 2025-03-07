@@ -7,12 +7,10 @@ export async function GET() {
   try {
     const exercises = (await prisma.exercise.findMany()) as Exercise[];
 
-    console.log('Fetched exercises:', exercises); // Debug log
-
     return NextResponse.json<ApiResponse>(
       {
         status: 'success',
-        data: exercises ?? [],
+        data: exercises,
         message: 'Exercises fetches successfully',
       }, // Ensures data is always an array
       { status: 200 }

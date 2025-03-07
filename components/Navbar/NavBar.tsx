@@ -23,7 +23,7 @@ const NavLinks = [
 
 const NavBar = () => {
   return (
-    <nav className="h-14 bg-gray-300 fixed bottom-0 left-0 w-full flex justify-around items-center">
+    <nav className="h-20 pb-4 bg-gray-300 fixed bottom-0 left-0 w-full flex justify-around items-center">
       {NavLinks.map(({ href, icon: Icon }) => (
         <Link
           key={href}
