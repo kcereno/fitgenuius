@@ -1,6 +1,6 @@
 'use client';
 
-import WorkoutList from '@/components/WorkoutList/WorkoutList';
+import NavigationList from '@/components/List/List';
 import useFetchWorkouts from '@/hooks/useFetchWorkouts';
 import React from 'react';
 
@@ -14,9 +14,12 @@ const WorkoutsPage = () => {
   return (
     <div className="p-4">
       {workouts?.length ? (
-        <WorkoutList workouts={workouts} />
+        <NavigationList
+          rootSlug={'workouts'}
+          list={workouts}
+        />
       ) : (
-        <p>No exercises in database</p>
+        <p>No workouts in database</p>
       )}
 
       {/* <AddExerciseForm /> */}
