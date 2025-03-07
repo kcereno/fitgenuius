@@ -1,22 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
-import { Exercise } from '@/types/exercise';
+
 import { prisma } from '@/lib/prisma';
+import { Workout } from '@/types/workout';
 
 export async function GET() {
   try {
-    const exercises = (await prisma.exercise.findMany()) as Exercise[];
+    const workouts = (await prisma.workout.findMany()) as Workout[];
+    console.log(' GET ~ workouts:', workouts);
 
     return NextResponse.json<ApiResponse>(
       {
         status: 'success',
-        data: exercises,
-        message: 'Exercises fetched successfully',
+        data: workouts,
+        message: 'Workouts fetched successfully',
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('GET /api/exercises error:', error);
+    console.error('GET /api/workouts error:', error);
 
     return NextResponse.json<ApiResponse>(
       {
@@ -24,7 +26,7 @@ export async function GET() {
         message:
           error instanceof Error
             ? error.message
-            : 'An unexpected error occurred while fetching exercises.',
+            : 'An unexpected error occurred while fetching workouts.',
       },
       { status: 500 }
     );
@@ -33,34 +35,34 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    // Extract new exercise
-    const newExercise = await req.json();
+    // Extract new workout
+    const newWorkout = await req.json();
 
-    const exerciseExists = await prisma.exercise.findFirst({
-      where: { id: newExercise.id },
+    const workoutExists = await prisma.workout.findFirst({
+      where: { id: newWorkout.id },
     });
 
-    // Check if new exercise exists in database. Return error if so
-    if (exerciseExists)
+    // Check if new workout exists in database. Return error if so
+    if (workoutExists)
       return NextResponse.json<ApiResponse>(
         {
           status: 'fail',
-          message: 'Exercise already exists in database',
+          message: 'workout already exists in database',
         },
         {
           status: 409,
         }
       );
 
-    // Add new exercise to database. Return success response
-    await prisma.exercise.create({
-      data: newExercise,
+    // Add new workout to database. Return success response
+    await prisma.workout.create({
+      data: newWorkout,
     });
 
     return NextResponse.json<ApiResponse>(
       {
         status: 'success',
-        message: 'Exercised added successfully!',
+        message: 'workout added successfully!',
       },
       { status: 201 }
     );
