@@ -19,20 +19,20 @@ export const fetchWorkouts = async () => {
   return response.data;
 };
 
-export const fetchExercise = async (exerciseId: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+export const fetchWorkout = async (workoutId: string) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutId}`;
   const res = await fetch(url);
 
   if (!res.ok) {
     const errorBody = await res.json();
     const errorMessage =
-      errorBody?.message || `Error fetching exercise (status: ${res.status})`;
+      errorBody?.message || `Error fetching workouts (status: ${res.status})`;
     throw new Error(errorMessage);
   }
 
-  const { data: exercise } = (await res.json()) as ApiResponse;
+  const { data: workout } = (await res.json()) as ApiResponse;
 
-  return exercise as Exercise;
+  return workout as Workout;
 };
 
 // Add
