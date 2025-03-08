@@ -46,3 +46,40 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ workoutId: string }> }
+) {
+  const { workoutId } = await params;
+  const formattedWorkoutId = dashToUnderscore(workoutId);
+  console.log(' formattedWorkoutId:', formattedWorkoutId);
+
+  try {
+    const workout = await prisma.workout.findUnique({
+      where: { id: formattedWorkoutId },
+    });
+    console.log(' workout:', workout);
+
+    if (!workout) {
+      return NextResponse.json(
+        { status: 'error', message: 'Workout not found' },
+        { status: 404 }
+      );
+    }
+
+    await prisma.workout.delete({
+      where: { id: formattedWorkoutId },
+    });
+
+    return NextResponse.json<ApiResponse>({
+      status: 'success',
+      message: 'Workout deleted',
+    });
+  } catch (error) {
+    return NextResponse.json<ApiResponse>({
+      status: 'error',
+      message: error as string,
+    });
+  }
+}

@@ -1,5 +1,5 @@
 import { ApiResponse } from '@/types/api';
-import { Exercise } from '@/types/exercise';
+
 import { Workout } from '@/types/workout';
 
 // Fetch
@@ -36,13 +36,11 @@ export const fetchWorkout = async (workoutId: string) => {
 };
 
 // Add
-export const addWorkout = async (
-  newExercise: Exercise
-): Promise<ApiResponse> => {
+export const addWorkout = async (newWorkout: Workout): Promise<ApiResponse> => {
   const res = await fetch('/api/workouts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(newExercise),
+    body: JSON.stringify(newWorkout),
   });
 
   const response = (await res.json()) as ApiResponse;
@@ -55,9 +53,8 @@ export const addWorkout = async (
 };
 
 // Delete
-export const deleteExercise = async (exerciseId: string) => {
-  console.log('edit Exercise Triggered');
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+export const deleteWorkout = async (workoutId: string) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutId}`;
 
   const res = await fetch(url, {
     method: 'DELETE',
@@ -76,16 +73,16 @@ export const deleteExercise = async (exerciseId: string) => {
 };
 
 // Edit
-export const editExercise = async (
-  exerciseId: string,
-  updatedExerciseData: Exercise
+export const editWorkout = async (
+  workoutId: string,
+  updatedWorkoutData: Workout
 ): Promise<ApiResponse> => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutId}`;
 
   const res = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updatedExerciseData),
+    body: JSON.stringify(updatedWorkoutData),
   });
 
   const response = (await res.json()) as ApiResponse;

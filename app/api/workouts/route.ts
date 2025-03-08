@@ -7,7 +7,6 @@ import { Workout } from '@/types/workout';
 export async function GET() {
   try {
     const workouts = (await prisma.workout.findMany()) as Workout[];
-    console.log(' GET ~ workouts:', workouts);
 
     return NextResponse.json<ApiResponse>(
       {
