@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dashToUnderscore } from '@/utils/formatters';
-import { Workout, workout } from '@/types/workout';
+import { Workout } from '@/types/workout';
 import { ApiResponse } from '@/types/api';
 
 import { PrismaClient } from '@prisma/client';
@@ -26,7 +26,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json<ApiResponse<workout>>({
+    return NextResponse.json<ApiResponse<Workout>>({
       status: 'success',
       message: 'Workout fetched successfully',
       data: workout,
