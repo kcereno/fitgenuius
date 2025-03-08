@@ -13,39 +13,38 @@ import {
   sanitizeInput,
   underscoreToDash,
 } from '@/utils/formatters';
+import { Workout } from '@/types/workout';
+import useEditWorkout from '@/hooks/useEditWorkout';
 
-interface EditExerciseFormProps {
-  initialExercise: Exercise;
+interface EditWorkoutFormProps {
+  initialWorkout: Workout;
 }
 
-const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
+const EditWorkoutForm = ({ initialWorkout }: EditWorkoutFormProps) => {
   const [open, setOpen] = useState(false);
-  const [updatedExercise, setUpdatedExercise] =
-    useState<Exercise>(initialExercise);
+  const [updatedWorkout, setUpdatedWorkout] = useState<Workout>(initialWorkout);
 
-  const { mutateAsync: editExercise, loading } = useEditExercise();
+  const { mutateAsync: editWorkout, loading } = useEditWorkout();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
     const updatedId = normalizeToUnderscore(
-      updatedExercise.name
+      updatedWorkout.name
     ).toLocaleLowerCase();
-    const transformedName = capitalizeWords(
-      sanitizeInput(updatedExercise.name)
-    );
+    const transformedName = capitalizeWords(sanitizeInput(updatedWorkout.name));
 
     const newSlug = underscoreToDash(updatedId);
 
     try {
-      await editExercise({
-        exerciseId: initialExercise.id,
-        updatedExercise: {
-          ...updatedExercise,
+      await editWorkout({
+        workoutId: initialWorkout.id,
+        updatedWorkout: {
+          ...updatedWorkout,
           id: updatedId,
           name: transformedName,
         },
-        redirectTo: `/exercises/${newSlug}`,
+        redirectTo: `/workouts/${newSlug}`,
       });
     } catch (error) {
       throw error;
@@ -55,7 +54,7 @@ const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    setUpdatedExercise({ ...updatedExercise, [name]: value });
+    setUpdatedWorkout({ ...updatedWorkout, [name]: value });
   };
 
   return (
@@ -69,8 +68,8 @@ const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
       </Button>
 
       <DialogForm
-        title="New Exercise Form"
-        description="Add Exercise Details"
+        title="Edit Workout"
+        description="Edit Workout Details"
         loading={loading}
         open={open}
         setOpen={setOpen}
@@ -81,13 +80,13 @@ const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
             htmlFor="name"
             className="text-right"
           >
-            Exercise
+            Workout
           </Label>
           <Input
             id="name"
             name="name"
             onChange={handleTextChange}
-            value={updatedExercise.name}
+            value={updatedWorkout.name}
             className="col-span-3"
           />
         </div>
@@ -96,4 +95,4 @@ const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
   );
 };
 
-export default EditExerciseForm;
+export default EditWorkoutForm;

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import useFetchWorkout from '@/hooks/useFetchWorkout';
 import useDeleteWorkout from '@/hooks/useDeleteWorkout';
+import EditWorkoutForm from '@/components/EditWorkoutForm/EditWorkoutForm';
 
 const WorkoutPage = () => {
   const { workoutId } = useParams();
@@ -43,7 +44,7 @@ const WorkoutPage = () => {
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{workout.name}</h1>
       <div className="flex gap-4 justify-center">
-        {/* <EditExerciseForm initialExercise={exercise} /> */}
+        <EditWorkoutForm initialWorkout={workout} />
         <Button onClick={handleDelete}>Delete</Button>
       </div>
     </div>
