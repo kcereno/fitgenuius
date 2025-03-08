@@ -4,16 +4,14 @@ import React, { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Exercise } from '@/types/exercise';
-
+import DialogForm from '../DialogForm/DialogForm';
+import { Button } from '../ui/button';
+import useAddExercise from '@/hooks/useAddExercise';
 import {
   capitalizeWords,
   normalizeToUnderscore,
   sanitizeInput,
 } from '@/utils/formatters';
-import DialogForm from '../DialogForm/DialogForm';
-import { Button } from '../ui/button';
-
-import useAddExercise from '@/hooks/useAddExercise';
 
 const INITIAL_NEW_EXERCISE_VALUE = {
   id: '',
@@ -31,11 +29,12 @@ const AddExerciseForm = () => {
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
 
-    const trimmedInput = capitalizeWords(sanitizeInput(newExercise.name));
-    const id = normalizeToUnderscore(trimmedInput).toLocaleLowerCase();
-    const sanitizedNewExercise = { ...newExercise, id, name: trimmedInput };
-
     try {
+      const trimmedName = capitalizeWords(sanitizeInput(newExercise.name));
+      const id = normalizeToUnderscore(trimmedName).toLocaleLowerCase();
+
+      const sanitizedNewExercise = { id, name: trimmedName };
+
       await addExercise(sanitizedNewExercise);
       setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
     } catch (error) {

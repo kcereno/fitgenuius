@@ -22,7 +22,7 @@ const WorkoutsPage = () => {
         <p>No workouts in database</p>
       )}
 
-      {/* <AddExerciseForm /> */}
+      <AddExerciseForm />
     </div>
   );
 };
