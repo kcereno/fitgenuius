@@ -36,10 +36,10 @@ export const fetchExercise = async (exerciseId: string) => {
 };
 
 // Add
-export const addExercise = async (
+export const addWorkout = async (
   newExercise: Exercise
 ): Promise<ApiResponse> => {
-  const res = await fetch('/api/exercises', {
+  const res = await fetch('/api/workouts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(newExercise),
