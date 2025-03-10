@@ -7,6 +7,7 @@ const useFetchExercises = () => {
     queryKey: ['exercises'],
     queryFn: fetchExercises,
     retry: 2,
+    staleTime: Infinity,
   });
 
   return { exercises: data, isLoading, error };

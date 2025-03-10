@@ -7,6 +7,7 @@ const useFetchWorkouts = () => {
     queryKey: ['workouts'],
     queryFn: fetchWorkouts,
     retry: 2,
+    staleTime: Infinity,
   });
 
   return { workouts: data, isLoading, error };
