@@ -15,9 +15,9 @@ export async function GET(
   const formattedWorkoutId = dashToUnderscore(workoutId);
 
   try {
-    const workout = await prisma.workout.findUnique({
+    const workout = (await prisma.workout.findUnique({
       where: { id: formattedWorkoutId },
-    });
+    })) as Workout;
 
     if (!workout) {
       return NextResponse.json(
