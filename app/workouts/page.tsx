@@ -2,21 +2,21 @@
 
 import AddWorkoutForm from '@/components/AddWorkoutForm/AddWorkoutForm';
 import NavigationList from '@/components/List/List';
-import useFetchWorkouts from '@/hooks/useFetchWorkouts';
+import useFetchWorkoutNames from '@/hooks/useFetchWorkoutNames';
 import React from 'react';
 
 const WorkoutsPage = () => {
-  const { workouts, isLoading, error } = useFetchWorkouts();
+  const { workoutNames, isLoading, error } = useFetchWorkoutNames();
 
   if (isLoading) return <p>Fetching workouts...</p>;
   if (error) return <p>Error fetching workouts</p>;
 
   return (
     <div className="p-4">
-      {workouts?.length ? (
+      {workoutNames?.length ? (
         <NavigationList
           rootSlug={'workouts'}
-          list={workouts}
+          list={workoutNames}
         />
       ) : (
         <p>No workouts in database</p>

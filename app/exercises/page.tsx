@@ -2,21 +2,21 @@
 
 import React from 'react';
 import AddExerciseForm from '../../components/AddExerciseForm/AddExerciseForm';
-import useFetchExercises from '@/hooks/useFetchExercises';
+import useFetchExerciseNames from '@/hooks/useFetchExerciseNames';
 import NavigationList from '@/components/List/List';
 
 const ExercisesPage = () => {
-  const { exercises, isLoading, error } = useFetchExercises();
+  const { exerciseNames, isLoading, error } = useFetchExerciseNames();
 
   if (isLoading) return <p>Fetching exercises...</p>;
   if (error) return <p>Error fetching exercises</p>;
 
   return (
     <div className="p-4">
-      {exercises?.length ? (
+      {exerciseNames?.length ? (
         <NavigationList
           rootSlug={'exercises'}
-          list={exercises}
+          list={exerciseNames}
         />
       ) : (
         <p>No exercises in database</p>
