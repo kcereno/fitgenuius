@@ -2,21 +2,23 @@
 
 import AddWorkoutForm from '@/components/AddWorkoutForm/AddWorkoutForm';
 import NavigationList from '@/components/List/List';
-import useFetchWorkoutNames from '@/hooks/useFetchWorkoutNames';
+import useFetchWorkouts from '@/hooks/useFetchWorkouts';
+import { IdNameType } from '@/types/data';
+
 import React from 'react';
 
 const WorkoutsPage = () => {
-  const { data: workoutNames, isLoading, error } = useFetchWorkoutNames();
+  const { data, isLoading, error } = useFetchWorkouts({ keys: ['id', 'name'] });
 
   if (isLoading) return <p>Fetching workouts...</p>;
   if (error) return <p>Error fetching workouts</p>;
 
   return (
     <div className="p-4">
-      {workoutNames?.length ? (
+      {data?.length ? (
         <NavigationList
           rootSlug={'workouts'}
-          list={workoutNames}
+          list={data as IdNameType[]}
         />
       ) : (
         <p>No workouts in database</p>

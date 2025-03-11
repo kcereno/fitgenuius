@@ -7,21 +7,19 @@ import NavigationList from '@/components/List/List';
 import { IdNameType } from '@/types/data';
 
 const ExercisesPage = () => {
-  const {
-    data: exerciseNames,
-    isLoading,
-    error,
-  } = useFetchExercises({ keys: ['id', 'name'] });
+  const { data, isLoading, error } = useFetchExercises({
+    keys: ['id', 'name'],
+  });
 
   if (isLoading) return <p>Fetching exercises...</p>;
   if (error) return <p>Error fetching exercises</p>;
 
   return (
     <div className="p-4">
-      {exerciseNames?.length ? (
+      {data?.length ? (
         <NavigationList
           rootSlug={'exercises'}
-          list={exerciseNames as IdNameType[]}
+          list={data as IdNameType[]}
         />
       ) : (
         <p>No exercises in database</p>
