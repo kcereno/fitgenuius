@@ -6,7 +6,7 @@ import useFetchExerciseNames from '@/hooks/useFetchExerciseNames';
 import NavigationList from '@/components/List/List';
 
 const ExercisesPage = () => {
-  const { exerciseNames, isLoading, error } = useFetchExerciseNames();
+  const { data: exerciseNames, isLoading, error } = useFetchExerciseNames();
 
   if (isLoading) return <p>Fetching exercises...</p>;
   if (error) return <p>Error fetching exercises</p>;

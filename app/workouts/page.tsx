@@ -6,7 +6,7 @@ import useFetchWorkoutNames from '@/hooks/useFetchWorkoutNames';
 import React from 'react';
 
 const WorkoutsPage = () => {
-  const { workoutNames, isLoading, error } = useFetchWorkoutNames();
+  const { data: workoutNames, isLoading, error } = useFetchWorkoutNames();
 
   if (isLoading) return <p>Fetching workouts...</p>;
   if (error) return <p>Error fetching workouts</p>;
