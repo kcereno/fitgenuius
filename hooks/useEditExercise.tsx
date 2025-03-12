@@ -1,8 +1,8 @@
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
-import { useMutationRequest } from './useMutationRequest';
 import { editExercise } from '@/lib/exercise-actions';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface EditExerciseVariables {
   exerciseId: string;
@@ -12,22 +12,19 @@ interface EditExerciseVariables {
 
 const useEditExercise = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const { mutateAsync, loading, error } = useMutationRequest<
-    ApiResponse,
-    EditExerciseVariables
-  >({
+  return useMutation<ApiResponse, Error, EditExerciseVariables>({
     mutationFn: ({ exerciseId, updatedExercise }) =>
       editExercise(exerciseId, updatedExercise),
-    invalidateKey: 'exercises',
-    onSuccess: (_, variables: EditExerciseVariables) => {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+
       if (variables.redirectTo) {
         router.push(variables.redirectTo);
       }
     },
   });
-
-  return { mutateAsync, loading, error };
 };
 
 export default useEditExercise;

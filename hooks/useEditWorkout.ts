@@ -1,8 +1,8 @@
 import { Workout } from '@/types/workout';
 import { useRouter } from 'next/navigation';
-import { useMutationRequest } from './useMutationRequest';
 import { ApiResponse } from '@/types/api';
 import { editWorkout } from '@/lib/workout-actions';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface EditWorkoutVariables {
   workoutId: string;
@@ -12,22 +12,19 @@ interface EditWorkoutVariables {
 
 const useEditWorkout = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const { mutateAsync, loading, error } = useMutationRequest<
-    ApiResponse,
-    EditWorkoutVariables
-  >({
+  return useMutation<ApiResponse, Error, EditWorkoutVariables>({
     mutationFn: ({ workoutId, updatedWorkout }) =>
       editWorkout(workoutId, updatedWorkout),
-    invalidateKey: 'workouts',
-    onSuccess: (_, variables: EditWorkoutVariables) => {
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['workouts'] });
+
       if (variables.redirectTo) {
         router.push(variables.redirectTo);
       }
     },
   });
-
-  return { mutateAsync, loading, error };
 };
 
 export default useEditWorkout;

@@ -7,11 +7,7 @@ interface UseFetchExercisesProps {
 }
 
 const useFetchExercises = ({ keys }: UseFetchExercisesProps = {}) => {
-  const { data, error, isLoading } = useQuery<
-    Exercise[],
-    Error,
-    Partial<Exercise>[]
-  >({
+  return useQuery<Exercise[], Error, Partial<Exercise>[]>({
     queryKey: ['exercises', keys],
     queryFn: fetchExercises,
     staleTime: Infinity,
@@ -22,8 +18,6 @@ const useFetchExercises = ({ keys }: UseFetchExercisesProps = {}) => {
           ) as Partial<Exercise>[])
         : data,
   });
-
-  return { data, error, isLoading };
 };
 
 export default useFetchExercises;

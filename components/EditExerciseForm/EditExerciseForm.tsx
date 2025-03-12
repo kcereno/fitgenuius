@@ -23,7 +23,7 @@ const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
   const [updatedExercise, setUpdatedExercise] =
     useState<Exercise>(initialExercise);
 
-  const { mutateAsync: editExercise, loading } = useEditExercise();
+  const { mutateAsync: editExercise, isPending } = useEditExercise();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -71,7 +71,7 @@ const EditExerciseForm = ({ initialExercise }: EditExerciseFormProps) => {
       <DialogForm
         title="New Exercise Form"
         description="Add Exercise Details"
-        loading={loading}
+        loading={isPending}
         open={open}
         setOpen={setOpen}
         onSubmit={handleSubmit}
