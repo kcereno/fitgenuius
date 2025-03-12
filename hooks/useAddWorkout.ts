@@ -1,16 +1,16 @@
-import { useMutationRequest } from './useMutationRequest';
 import { Workout } from '@/types/workout';
 import { addWorkout } from '@/lib/workout-actions';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const useAddWorkout = () => {
-  const { mutateAsync, loading, error } = useMutationRequest({
-    mutationFn: async (newWorkout: Workout) => {
-      return await addWorkout(newWorkout);
-    },
-    invalidateKey: 'workouts',
-  });
+  const queryClient = useQueryClient();
 
-  return { mutateAsync, loading, error };
+  return useMutation({
+    mutationFn: async (newWorkout: Workout) => await addWorkout(newWorkout),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['workouts'] });
+    },
+  });
 };
 
 export default useAddWorkout;

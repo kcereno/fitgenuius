@@ -24,7 +24,7 @@ const AddExerciseForm = () => {
     INITIAL_NEW_EXERCISE_VALUE
   );
 
-  const { mutateAsync: addExercise, loading } = useAddExercise();
+  const { mutateAsync: addExercise, isPending } = useAddExercise();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
@@ -33,7 +33,7 @@ const AddExerciseForm = () => {
       const trimmedName = capitalizeWords(sanitizeInput(newExercise.name));
       const id = normalizeToUnderscore(trimmedName).toLocaleLowerCase();
 
-      const sanitizedNewExercise = { id, name: trimmedName };
+      const sanitizedNewExercise = { id, name: trimmedName } as Exercise;
 
       await addExercise(sanitizedNewExercise);
       setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
@@ -71,7 +71,7 @@ const AddExerciseForm = () => {
         title="New Exercise Form"
         description="Add Exercise Details"
         onSubmit={handleSubmit}
-        loading={loading}
+        loading={isPending}
       >
         <div className="grid grid-cols-4 items-center gap-4">
           <Label

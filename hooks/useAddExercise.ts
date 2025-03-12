@@ -1,17 +1,16 @@
 import { addExercise } from '@/lib/exercise-actions';
-
-import { useMutationRequest } from './useMutationRequest';
 import { Exercise } from '@/types/exercise';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const useAddExercise = () => {
-  const { mutateAsync, loading, error } = useMutationRequest({
-    mutationFn: async (newExercise: Exercise) => {
-      return await addExercise(newExercise);
-    },
-    invalidateKey: 'exercises',
-  });
+  const queryClient = useQueryClient();
 
-  return { mutateAsync, loading, error };
+  return useMutation({
+    mutationFn: async (newExercise: Exercise) => await addExercise(newExercise),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercises'] });
+    },
+  });
 };
 
 export default useAddExercise;
