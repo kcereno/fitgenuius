@@ -1,63 +1,127 @@
 'use client';
 
-import React from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import * as React from 'react';
+import { Minus, Plus } from 'lucide-react';
+import { Bar, BarChart, ResponsiveContainer } from 'recharts';
+
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import useFetchWorkout from '@/hooks/useFetchWorkout';
-import useDeleteWorkout from '@/hooks/useDeleteWorkout';
-import EditWorkoutForm from '@/components/EditWorkoutForm/EditWorkoutForm';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 
-const WorkoutPage = () => {
-  const { workoutId } = useParams();
-  const router = useRouter();
+const data = [
+  {
+    goal: 400,
+  },
+  {
+    goal: 300,
+  },
+  {
+    goal: 200,
+  },
+  {
+    goal: 300,
+  },
+  {
+    goal: 200,
+  },
+  {
+    goal: 278,
+  },
+  {
+    goal: 189,
+  },
+  {
+    goal: 239,
+  },
+  {
+    goal: 300,
+  },
+  {
+    goal: 200,
+  },
+  {
+    goal: 278,
+  },
+  {
+    goal: 189,
+  },
+  {
+    goal: 349,
+  },
+];
 
-  const {
-    data: workout,
-    isLoading,
-    error,
-  } = useFetchWorkout(workoutId as string);
+export function DrawerDemo() {
+  const [goal, setGoal] = React.useState(350);
 
-  const { mutate: deleteWorkout } = useDeleteWorkout();
-
-  if (isLoading) return <p>Loading workout...</p>;
-  if (error)
-    return (
-      <div>
-        <p>{error.message}</p>
-        <Link href={'/workouts'}>
-          <Button>Go back to exercise list</Button>workout
-        </Link>
-      </div>
-    );
-  if (!workout) {
-    router.push('/exercises');
-    return null;
+  function onClick(adjustment: number) {
+    setGoal(Math.max(200, Math.min(400, goal + adjustment)));
   }
 
-  const handleDelete = async () => {
-    deleteWorkout(workoutId as string);
-  };
-
   return (
-    <div className="p-4 flex flex-col min-h-screen gap-4">
-      <h1 className="text-center text-xl font-bold">{workout.name}</h1>
-      <div className="flex gap-4 justify-center">
-        <EditWorkoutForm initialWorkout={workout} />
-        <Button onClick={handleDelete}>Delete</Button>
-      </div>
-      <hr />
-      <div className="flex gap-4 justify-center">
-        <Button>Add Exercise</Button>
-        <Button>Edit</Button>
-      </div>
-      {/* Exercise List */}
-      <ul className="flex flex-col bg-gray-300">
-        <li>Item 1</li>
-        <li>Item 2</li>
-      </ul>
-    </div>
+    <Drawer>
+      <DrawerTrigger asChild>
+        <Button variant="outline">Open Drawer</Button>
+      </DrawerTrigger>
+      <DrawerContent>
+        <div className="mx-auto w-full max-w-sm">
+          <DrawerHeader>
+            <DrawerTitle>Move Goal</DrawerTitle>
+            <DrawerDescription>Set your daily activity goal.</DrawerDescription>
+          </DrawerHeader>
+          <div className="p-4 pb-0">
+            <div className="flex items-center justify-center space-x-2">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 shrink-0 rounded-full"
+                onClick={() => onClick(-10)}
+                disabled={goal <= 200}
+              >
+                <Minus />
+                <span className="sr-only">Decrease</span>
+              </Button>
+              <div className="flex-1 text-center">
+                <div className="text-7xl font-bold tracking-tighter">
+                  {goal}
+                </div>
+                <div className="text-[0.70rem] uppercase text-muted-foreground">
+                  Calories/day
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 shrink-0 rounded-full"
+                onClick={() => onClick(10)}
+                disabled={goal >= 400}
+              >
+                <Plus />
+                <span className="sr-only">Increase</span>
+              </Button>
+            </div>
+            <div className="mt-3 h-[120px]">
+              <ResponsiveContainer
+                width="100%"
+                height="100%"
+              ></ResponsiveContainer>
+            </div>
+          </div>
+          <DrawerFooter>
+            <Button>Submit</Button>
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
-};
-
-export default WorkoutPage;
+}
