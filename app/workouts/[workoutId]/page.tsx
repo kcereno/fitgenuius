@@ -17,7 +17,6 @@ const WorkoutPage = () => {
     isLoading,
     error,
   } = useFetchWorkout(workoutId as string);
-  console.log(' WorkoutPage ~ workout:', workout);
 
   const { mutate: deleteWorkout } = useDeleteWorkout();
 
@@ -47,6 +46,16 @@ const WorkoutPage = () => {
         <EditWorkoutForm initialWorkout={workout} />
         <Button onClick={handleDelete}>Delete</Button>
       </div>
+      <hr />
+      <div className="flex gap-4 justify-center">
+        <Button>Add Exercise</Button>
+        <Button>Edit</Button>
+      </div>
+      {/* Exercise List */}
+      <ul className="flex flex-col bg-gray-300">
+        <li>Item 1</li>
+        <li>Item 2</li>
+      </ul>
     </div>
   );
 };
