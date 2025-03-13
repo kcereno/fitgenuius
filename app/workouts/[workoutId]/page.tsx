@@ -7,16 +7,7 @@ import Link from 'next/link';
 import useFetchWorkout from '@/hooks/useFetchWorkout';
 import useDeleteWorkout from '@/hooks/useDeleteWorkout';
 import EditWorkoutForm from '@/components/EditWorkoutForm/EditWorkoutForm';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+import MobileDrawer from '@/components/MobileDrawer/MobileDrawer';
 
 const WorkoutPage = () => {
   const { workoutId } = useParams();
@@ -66,26 +57,11 @@ const WorkoutPage = () => {
         <li>Item 1</li>
         <li>Item 2</li>
       </ul>
-      {/* Drawer */}
-      <Drawer
+
+      <MobileDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}
-        autoFocus={openDrawer}
-      >
-        <DrawerTrigger>Open</DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      />
     </div>
   );
 };
