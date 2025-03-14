@@ -7,28 +7,39 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/components/ui/drawer';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 interface MobileDrawerProps {
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
+  description?: string;
+  children: React.ReactNode;
 }
 
-const MobileDrawer = ({ open, onOpenChange }: MobileDrawerProps) => {
+const MobileDrawer = ({
+  open,
+  onOpenChange,
+  children,
+  title,
+  description,
+}: MobileDrawerProps) => {
   return (
     <Drawer
       open={open}
       onOpenChange={onOpenChange}
       autoFocus={open}
     >
-      <DrawerTrigger>Open</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <DrawerTitle>{title}</DrawerTitle>
+          {description ? (
+            <DrawerDescription>{description}</DrawerDescription>
+          ) : null}
         </DrawerHeader>
+        <div className="px-4">{children}</div>
+
         <DrawerFooter>
           <Button>Submit</Button>
           <DrawerClose asChild>

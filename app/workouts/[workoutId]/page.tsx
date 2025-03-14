@@ -7,7 +7,7 @@ import Link from 'next/link';
 import useFetchWorkout from '@/hooks/useFetchWorkout';
 import useDeleteWorkout from '@/hooks/useDeleteWorkout';
 import EditWorkoutForm from '@/components/EditWorkoutForm/EditWorkoutForm';
-import MobileDrawer from '@/components/MobileDrawer/MobileDrawer';
+import ExerciseDrawer from '@/components/Drawer/MobileDrawer/ExerciseDrawer';
 
 const WorkoutPage = () => {
   const { workoutId } = useParams();
@@ -49,7 +49,13 @@ const WorkoutPage = () => {
       </div>
       <hr />
       <div className="flex gap-4 justify-center">
-        <Button>Add Exercise</Button>
+        <Button
+          onClick={() => {
+            setOpenDrawer(true);
+          }}
+        >
+          Add Exercise
+        </Button>
         <Button>Edit</Button>
       </div>
       {/* Exercise List */}
@@ -58,10 +64,12 @@ const WorkoutPage = () => {
         <li>Item 2</li>
       </ul>
 
-      <MobileDrawer
+      <ExerciseDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}
-      />
+      >
+        <h1>Test</h1>
+      </ExerciseDrawer>
     </div>
   );
 };
