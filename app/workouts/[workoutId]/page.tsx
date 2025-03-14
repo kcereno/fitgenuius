@@ -8,17 +8,21 @@ import useFetchWorkout from '@/hooks/useFetchWorkout';
 import useDeleteWorkout from '@/hooks/useDeleteWorkout';
 import EditWorkoutForm from '@/components/EditWorkoutForm/EditWorkoutForm';
 import ExerciseDrawer from '@/components/Drawer/MobileDrawer/ExerciseDrawer';
+import { Exercise } from '@/types/exercise';
 
 const WorkoutPage = () => {
   const { workoutId } = useParams();
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  // Fetching
   const {
     data: workout,
     isLoading,
     error,
   } = useFetchWorkout(workoutId as string);
 
+  // Mutations
   const { mutate: deleteWorkout } = useDeleteWorkout();
 
   if (isLoading) return <p>Loading workout...</p>;
@@ -38,6 +42,11 @@ const WorkoutPage = () => {
 
   const handleDelete = async () => {
     deleteWorkout(workoutId as string);
+  };
+
+  const handleUpdateWorkout = (exercises: Pick<Exercise, 'name'>[]) => {
+    console.log(' handleUpdateWorkout ~ exercises:', exercises);
+    // const updatedWorkout = { ...workout };
   };
 
   return (
@@ -67,9 +76,8 @@ const WorkoutPage = () => {
       <ExerciseDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}
-      >
-        <h1>Test</h1>
-      </ExerciseDrawer>
+        onSubmit={handleUpdateWorkout}
+      />
     </div>
   );
 };

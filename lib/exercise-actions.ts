@@ -3,6 +3,7 @@ import { Exercise } from '@/types/exercise';
 
 // Fetch
 export const fetchExercises = async () => {
+  console.log('fetchExercise request made');
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises`;
   const res = await fetch(url, { cache: 'no-store' });
 

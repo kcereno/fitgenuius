@@ -6,7 +6,6 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const exercises = (await prisma.exercise.findMany()) as Exercise[];
-    console.log(' GET ~ exercises:', exercises);
 
     return NextResponse.json<ApiResponse>(
       {

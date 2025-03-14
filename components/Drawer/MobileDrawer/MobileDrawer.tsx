@@ -16,6 +16,7 @@ interface MobileDrawerProps {
   title: string;
   description?: string;
   children: React.ReactNode;
+  onSubmit: () => void;
 }
 
 const MobileDrawer = ({
@@ -24,6 +25,7 @@ const MobileDrawer = ({
   children,
   title,
   description,
+  onSubmit,
 }: MobileDrawerProps) => {
   return (
     <Drawer
@@ -34,14 +36,14 @@ const MobileDrawer = ({
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>{title}</DrawerTitle>
-          {description ? (
-            <DrawerDescription>{description}</DrawerDescription>
-          ) : null}
+          <DrawerDescription>
+            {description ? description : ''}
+          </DrawerDescription>
         </DrawerHeader>
         <div className="px-4">{children}</div>
 
         <DrawerFooter>
-          <Button>Submit</Button>
+          <Button onClick={onSubmit}>Submit</Button>
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>

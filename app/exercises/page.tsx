@@ -7,9 +7,7 @@ import NavigationList from '@/components/List/List';
 import { IdNameType } from '@/types/data';
 
 const ExercisesPage = () => {
-  const { data, isLoading, error } = useFetchExercises({
-    keys: ['id', 'name'],
-  });
+  const { data, isLoading, error } = useFetchExercises();
 
   if (isLoading) return <p>Fetching exercises...</p>;
   if (error) return <p>Error fetching exercises</p>;
