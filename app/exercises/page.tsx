@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import AddExerciseForm from '../../components/AddExerciseForm/AddExerciseForm';
 import useFetchExercises from '@/hooks/useFetchExercises';
-import NavigationList from '@/components/List/List';
-import { IdNameType } from '@/types/data';
+import NavigationList, { NavigationListEntry } from '@/components/List/List';
 import AddExerciseDrawer from '@/components/AddExerciseDrawer/AddExerciseDrawer';
 import { Button } from '@/components/ui/button';
 
@@ -24,18 +22,16 @@ const ExercisesPage = () => {
       {data?.length ? (
         <NavigationList
           rootSlug={'exercises'}
-          list={data as IdNameType[]}
+          list={data as NavigationListEntry[]}
         />
       ) : (
         <p>No exercises in database</p>
       )}
-      {/* 
-      <AddExerciseForm /> */}
+
       <Button onClick={handleAddExerciseButtonClick}>Add Exercise</Button>
       <AddExerciseDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}
-        onSubmit={() => {}}
       />
     </div>
   );

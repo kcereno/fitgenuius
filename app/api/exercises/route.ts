@@ -11,6 +11,7 @@ export async function GET() {
         id: true,
         name: true,
         movementType: true,
+        slug: true,
       },
     });
 
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const formattedNewExercise: Omit<Exercise, 'history'> = {
+    const formattedNewExercise: Exercise = {
       ...newExercise,
       id: crypto.randomUUID(),
       slug: slugify(newExercise.name),

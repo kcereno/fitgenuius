@@ -80,7 +80,6 @@ export async function PUT(
     const { workoutId } = await params;
     const { exercises } = await req.json();
 
-    console.log(exercises);
     const workoutExists = await prisma.workout.findUnique({
       where: { id: workoutId },
     });
@@ -99,7 +98,6 @@ export async function PUT(
     const validExercises = await prisma.exercise.findMany({
       where: { id: { in: exerciseIds } },
     });
-    console.log(' validExercises:', validExercises);
 
     if (validExercises.length !== exerciseIds.length) {
       return NextResponse.json(

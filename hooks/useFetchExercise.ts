@@ -1,11 +1,11 @@
 import { fetchExercise } from '@/lib/exercise-actions';
 import { useQuery } from '@tanstack/react-query';
 
-const useFetchExercise = (exerciseId: string) => {
+const useFetchExercise = (exerciseSlug: string) => {
   return useQuery({
-    queryKey: ['exercise', exerciseId],
-    queryFn: () => fetchExercise(exerciseId as string),
-    enabled: !!exerciseId,
+    queryKey: ['exercise', exerciseSlug],
+    queryFn: () => fetchExercise(exerciseSlug as string),
+    enabled: !!exerciseSlug,
   });
 };
 

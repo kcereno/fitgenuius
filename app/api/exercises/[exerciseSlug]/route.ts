@@ -9,14 +9,13 @@ const prisma = new PrismaClient();
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ exerciseId: string }> }
+  { params }: { params: Promise<{ exerciseSlug: string }> }
 ) {
-  const { exerciseId } = await params;
-  const formattedExerciseId = dashToUnderscore(exerciseId);
+  const { exerciseSlug } = await params;
 
   try {
     const exercise = await prisma.exercise.findUnique({
-      where: { id: formattedExerciseId },
+      where: { slug: exerciseSlug },
     });
 
     if (!exercise) {
@@ -27,7 +26,7 @@ export async function GET(
     }
 
     return NextResponse.json<ApiResponse<Exercise>>({
-      status: 'success',
+      success: true,
       message: 'Exercise fetched successfully',
       data: exercise,
     });
@@ -36,7 +35,7 @@ export async function GET(
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'error',
+        success: false,
         message:
           error instanceof Error
             ? error.message
@@ -71,12 +70,12 @@ export async function DELETE(
     });
 
     return NextResponse.json<ApiResponse>({
-      status: 'success',
+      success: true,
       message: 'Exercise deleted',
     });
   } catch (error) {
     return NextResponse.json<ApiResponse>({
-      status: 'error',
+      success: false,
       message: error as string,
     });
   }
@@ -89,17 +88,15 @@ export async function PUT(
   const { exerciseId } = await params;
   const formattedExerciseId = dashToUnderscore(exerciseId);
   const updatedExercise = (await req.json()) as Exercise;
-  console.log(' updatedExercise:', updatedExercise);
 
   try {
     const exerciseExists = await prisma.exercise.findFirst({
       where: { id: updatedExercise.id },
     });
-    console.log(' exerciseExists:', exerciseExists);
 
     if (exerciseExists) {
       return NextResponse.json<ApiResponse>(
-        { status: 'fail', message: 'Exercise already exists in database' },
+        { success: false, message: 'Exercise already exists in database' },
         { status: 400 }
       );
     }
@@ -110,13 +107,13 @@ export async function PUT(
     });
 
     return NextResponse.json<ApiResponse>({
-      status: 'success',
+      success: false,
       message: 'Exercise updated successfully',
     });
   } catch (error) {
     console.error('PUT ~ error:', error);
     return NextResponse.json<ApiResponse>(
-      { status: 'fail', message: 'Failed to update exercise' },
+      { success: false, message: 'Failed to update exercise' },
       { status: 500 }
     );
   }

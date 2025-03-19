@@ -1,20 +1,22 @@
-import { IdNameType } from '@/types/data';
-import { underscoreToDash } from '@/utils/formatters';
 import Link from 'next/link';
 import React from 'react';
 
-interface ListProps {
+export interface NavigationListEntry {
+  slug: string;
+  name: string;
+}
+interface NavigationListProps {
   rootSlug: string;
-  list: IdNameType[];
+  list: NavigationListEntry[];
 }
 
-const NavigationList = ({ list, rootSlug }: ListProps) => {
+const NavigationList = ({ list, rootSlug }: NavigationListProps) => {
   return (
     <ul>
-      {list.map((listItem: IdNameType) => {
-        const href = `/${rootSlug}/${underscoreToDash(listItem.id)}`;
+      {list.map((listItem) => {
+        const href = `/${rootSlug}/${listItem.slug}`;
         return (
-          <li key={listItem.id}>
+          <li key={listItem.name}>
             <Link href={href}>{listItem.name}</Link>
           </li>
         );

@@ -36,7 +36,6 @@ interface AddExerciseDrawerProps {
 const AddExerciseDrawer = ({ open, onOpenChange }: AddExerciseDrawerProps) => {
   const [newExercise, setNewExercise] = useState(INITIAL_NEW_EXERCISE_VALUE);
   const { mutateAsync: addExercise, isPending, error } = useAddExercise();
-  console.log(' AddExerciseDrawer ~ error:', error);
 
   const movementTypes: MovementType[] = [
     'SQUAT',

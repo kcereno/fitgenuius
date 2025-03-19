@@ -18,8 +18,8 @@ export const fetchExercises = async () => {
   return response.data;
 };
 
-export const fetchExercise = async (exerciseId: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+export const fetchExercise = async (exerciseSlug: string) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseSlug}`;
   const res = await fetch(url);
 
   if (!res.ok) {
@@ -38,8 +38,6 @@ export const fetchExercise = async (exerciseId: string) => {
 export const addExercise = async (
   newExercise: Pick<Exercise, 'name' | 'movementType'>
 ): Promise<ApiResponse> => {
-  console.log(' newExercise:', newExercise);
-
   const res = await fetch('/api/exercises', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -57,7 +55,6 @@ export const addExercise = async (
 
 // Delete
 export const deleteExercise = async (exerciseId: string) => {
-  console.log('edit Exercise Triggered');
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
 
   const res = await fetch(url, {

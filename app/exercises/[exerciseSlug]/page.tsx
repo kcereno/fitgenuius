@@ -9,14 +9,14 @@ import useDeleteExercise from '@/hooks/useDeleteExercise';
 import Link from 'next/link';
 
 const ExercisePage = () => {
-  const { exerciseId } = useParams();
+  const { exerciseSlug } = useParams();
   const router = useRouter();
 
   const {
     data: exercise,
     isLoading,
     error,
-  } = useFetchExercise(exerciseId as string);
+  } = useFetchExercise(exerciseSlug as string);
 
   const { mutate: deleteExerciseMutation } = useDeleteExercise();
 
@@ -36,7 +36,7 @@ const ExercisePage = () => {
   }
 
   const handleDelete = async () => {
-    deleteExerciseMutation(exerciseId as string);
+    deleteExerciseMutation(exerciseSlug as string);
   };
 
   return (

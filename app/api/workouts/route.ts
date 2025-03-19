@@ -10,7 +10,7 @@ export async function GET() {
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'success',
+        success: true,
         data: workouts,
         message: 'Workouts fetched successfully',
       },
@@ -21,7 +21,7 @@ export async function GET() {
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'error',
+        success: false,
         message:
           error instanceof Error
             ? error.message
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     if (workoutExists)
       return NextResponse.json<ApiResponse>(
         {
-          status: 'fail',
+          success: false,
           message: 'workout already exists in database',
         },
         {
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'success',
+        success: true,
         message: 'workout added successfully!',
       },
       { status: 201 }
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log(' POST ~ error:', error);
     return NextResponse.json<ApiResponse>({
-      status: 'error',
+      success: false,
       message:
         error instanceof Error ? error.message : 'An unexpected error occurred',
     });

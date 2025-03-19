@@ -1,11 +1,3 @@
-// export type MovementType =
-//   | 'squat'
-//   | 'hinge'
-//   | 'push'
-//   | 'pull'
-//   | 'core'
-//   | 'carry';
-
 import { MovementType } from '@prisma/client';
 
 export interface Exercise {
@@ -13,9 +5,11 @@ export interface Exercise {
   name: string;
   slug: string;
   movementType: MovementType;
-  history: ExerciseHistoryEntry[];
 }
 
+export interface ExerciseWithHistory extends Exercise {
+  history: ExerciseHistoryEntry[];
+}
 export interface ExerciseHistoryEntry {
   date: string;
   workoutId: string;

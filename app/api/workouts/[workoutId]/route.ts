@@ -12,9 +12,7 @@ export async function GET(
   { params }: { params: Promise<{ workoutId: string }> }
 ) {
   const { workoutId } = await params;
-  console.log(' workoutId:', workoutId);
   const formattedWorkoutId = dashToUnderscore(workoutId);
-  console.log(' formattedWorkoutId:', formattedWorkoutId);
 
   try {
     const workout = (await prisma.workout.findUnique({
@@ -55,13 +53,11 @@ export async function DELETE(
 ) {
   const { workoutId } = await params;
   const formattedWorkoutId = dashToUnderscore(workoutId);
-  console.log(' formattedWorkoutId:', formattedWorkoutId);
 
   try {
     const workout = await prisma.workout.findUnique({
       where: { id: formattedWorkoutId },
     });
-    console.log(' workout:', workout);
 
     if (!workout) {
       return NextResponse.json(
@@ -93,7 +89,6 @@ export async function PUT(
   const { workoutId } = await params;
   const formattedWorkoutId = dashToUnderscore(workoutId);
   const updatedWorkout = (await req.json()) as Workout;
-  console.log(' updatedWorkout:', updatedWorkout);
 
   try {
     const workoutExists = await prisma.workout.findFirst({
