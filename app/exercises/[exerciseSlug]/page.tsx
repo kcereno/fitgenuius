@@ -14,17 +14,17 @@ const ExercisePage = () => {
 
   const {
     data: exercise,
-    isLoading,
-    error,
+    isLoading: fetchExerciseIsLoading,
+    error: fetchExerciseError,
   } = useFetchExercise(exerciseSlug as string);
 
   const { mutate: deleteExercise, isPending } = useDeleteExercise();
 
-  if (isLoading) return <p>Loading exercise...</p>;
-  if (error)
+  if (fetchExerciseIsLoading) return <p>Loading exercise...</p>;
+  if (fetchExerciseError)
     return (
       <div>
-        <p>{error.message}</p>
+        <p>{fetchExerciseError.message}</p>
         <Link href={'/exercises'}>
           <Button>Go back to exercise list</Button>
         </Link>

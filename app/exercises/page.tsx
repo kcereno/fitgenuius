@@ -3,18 +3,37 @@
 import React, { useState } from 'react';
 import useFetchExercises from '@/hooks/useFetchExercises';
 import NavigationList, { NavigationListEntry } from '@/components/List/List';
-import AddExerciseDrawer from '@/components/AddExerciseDrawer/AddExerciseDrawer';
 import { Button } from '@/components/ui/button';
+import ExerciseFormDrawer from '@/components/ExerciseFormDrawer/ExerciseFormDrawer';
+import useAddExercise from '@/hooks/useAddExercise';
+import { Exercise } from '@/types/exercise';
 
 const ExercisesPage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const { data, isLoading, error } = useFetchExercises();
+  const {
+    mutateAsync: addExercise,
+    isPending,
+    error: addExerciseError,
+  } = useAddExercise();
 
   if (isLoading) return <p>Fetching exercises...</p>;
   if (error) return <p>Error fetching exercises</p>;
 
   const handleAddExerciseButtonClick = () => {
     setOpenDrawer(true);
+  };
+
+  const handleAddExercise = async (
+    exerciseData: Pick<Exercise, 'name' | 'movementType'>
+  ) => {
+    try {
+      await addExercise(exerciseData);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : 'Error adding exercise'
+      );
+    }
   };
 
   return (
@@ -29,9 +48,13 @@ const ExercisesPage = () => {
       )}
 
       <Button onClick={handleAddExerciseButtonClick}>Add Exercise</Button>
-      <AddExerciseDrawer
+
+      <ExerciseFormDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}
+        onSubmit={handleAddExercise}
+        isPending={isPending}
+        error={addExerciseError}
       />
     </div>
   );

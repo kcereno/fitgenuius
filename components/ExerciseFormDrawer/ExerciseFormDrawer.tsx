@@ -1,15 +1,11 @@
+import { DrawerProps } from '@/types/component';
 import { Exercise } from '@/types/exercise';
-import React, { useState } from 'react';
-import { Label } from '../ui/label';
-import { Input } from '../ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
+  capitalizeFirstLetter,
+  sanitizeAndCapitalize,
+} from '@/utils/formatters';
+import { MovementType } from '@prisma/client';
+import React, { useState } from 'react';
 import {
   Drawer,
   DrawerClose,
@@ -19,27 +15,40 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import { Button } from '../ui/button';
-import useAddExercise from '@/hooks/useAddExercise';
-import { MovementType } from '@prisma/client';
+import { Label } from '../ui/label';
+import { Input } from '../ui/input';
 import {
-  capitalizeFirstLetter,
-  sanitizeAndCapitalize,
-} from '@/utils/formatters';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Button } from '../ui/button';
 
-const INITIAL_NEW_EXERCISE_VALUE: Pick<Exercise, 'name' | 'movementType'> = {
+const INITIAL_EXERCISE: Pick<Exercise, 'name' | 'movementType'> = {
   name: '',
   movementType: 'SQUAT',
 };
 
-interface DrawerProps {
-  open: boolean;
-  onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
+interface ExerciseDrawerProps extends DrawerProps {
+  initialExercise?: Pick<Exercise, 'name' | 'movementType'>;
+  onSubmit: (
+    exerciseData: Pick<Exercise, 'name' | 'movementType'>
+  ) => Promise<void>;
+  isPending: boolean;
+  error: Error | null;
 }
 
-const AddExerciseDrawer = ({ open, onOpenChange }: DrawerProps) => {
-  const [newExercise, setNewExercise] = useState(INITIAL_NEW_EXERCISE_VALUE);
-  const { mutateAsync: addExercise, isPending, error } = useAddExercise();
+const ExerciseFormDrawer = ({
+  open,
+  onOpenChange,
+  initialExercise = INITIAL_EXERCISE,
+  onSubmit,
+  isPending,
+  error,
+}: ExerciseDrawerProps) => {
+  const [exercise, setExercise] = useState(initialExercise);
 
   const movementTypes: MovementType[] = [
     'SQUAT',
@@ -52,32 +61,31 @@ const AddExerciseDrawer = ({ open, onOpenChange }: DrawerProps) => {
 
   const handleSubmit = async () => {
     try {
-      const sanitizedNewExercise = {
-        ...newExercise,
-        name: sanitizeAndCapitalize(newExercise.name),
+      const sanitizedExercise = {
+        ...exercise,
+        name: sanitizeAndCapitalize(exercise.name),
       };
-      await addExercise(sanitizedNewExercise);
 
-      setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
+      await onSubmit(sanitizedExercise);
+      setExercise(INITIAL_EXERCISE);
       onOpenChange(false);
     } catch (error) {
       console.log(' handleSubmit ~ error:', error);
     }
   };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputName = e.target.name;
     const inputValue = e.target.value;
 
-    const updatedNewExercise = {
-      ...newExercise,
+    const updatedExerciseData = {
+      ...exercise,
       [inputName]: inputValue,
     };
-    setNewExercise(updatedNewExercise);
+    setExercise(updatedExerciseData);
   };
 
   const handleSelectChange = (value: string) => {
-    setNewExercise((prev) => ({
+    setExercise((prev) => ({
       ...prev,
       movementType: value as MovementType,
     }));
@@ -105,7 +113,7 @@ const AddExerciseDrawer = ({ open, onOpenChange }: DrawerProps) => {
             id="name"
             name="name"
             onChange={handleInputChange}
-            value={newExercise.name}
+            value={exercise.name}
             className="col-span-3"
           />
           <Label
@@ -115,7 +123,7 @@ const AddExerciseDrawer = ({ open, onOpenChange }: DrawerProps) => {
             Movement
           </Label>
           <Select
-            value={newExercise.movementType}
+            value={exercise.movementType}
             onValueChange={handleSelectChange}
           >
             <SelectTrigger className="col-span-3">
@@ -149,4 +157,4 @@ const AddExerciseDrawer = ({ open, onOpenChange }: DrawerProps) => {
   );
 };
 
-export default AddExerciseDrawer;
+export default ExerciseFormDrawer;
