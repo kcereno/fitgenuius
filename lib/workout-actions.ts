@@ -9,9 +9,9 @@ export const fetchWorkouts = async () => {
 
   const response = (await res.json()) as ApiResponse<Workout[]>;
 
-  if (!res.ok || response.status !== 'success' || !response.data) {
+  if (!res.ok || !response.success || !response.data) {
     return Promise.reject({
-      status: response.status,
+      status: response.success,
       message: response.message,
     });
   }
@@ -36,7 +36,9 @@ export const fetchWorkout = async (workoutId: string) => {
 };
 
 // Add
-export const addWorkout = async (newWorkout: Workout): Promise<ApiResponse> => {
+export const addWorkout = async (
+  newWorkout: Pick<Workout, 'name'>
+): Promise<ApiResponse> => {
   const res = await fetch('/api/workouts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

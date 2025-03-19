@@ -70,7 +70,7 @@ const ExerciseFormDrawer = ({
       setExercise(INITIAL_EXERCISE);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : 'Unknown error occured'
+        error instanceof Error ? error.message : 'Unknown error occurred'
       );
     }
   };
@@ -79,11 +79,11 @@ const ExerciseFormDrawer = ({
     const inputName = e.target.name;
     const inputValue = e.target.value;
 
-    const updatedExerciseData = {
+    const updatedExercise = {
       ...exercise,
       [inputName]: inputValue,
     };
-    setExercise(updatedExerciseData);
+    setExercise(updatedExercise);
   };
 
   const handleSelectChange = (value: string) => {

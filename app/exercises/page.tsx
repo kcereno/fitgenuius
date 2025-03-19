@@ -25,6 +25,7 @@ const ExercisesPage = () => {
   ) => {
     try {
       await addExercise(exerciseData);
+      setOpenDrawer(false);
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : 'Error adding exercise'

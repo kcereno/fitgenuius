@@ -1,30 +1,53 @@
 'use client';
 
-import AddWorkoutForm from '@/components/AddWorkoutForm/AddWorkoutForm';
-import NavigationList from '@/components/List/List';
+import NavigationList, { NavigationListEntry } from '@/components/List/List';
+import { Button } from '@/components/ui/button';
+import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
+import useAddWorkout from '@/hooks/useAddWorkout';
 import useFetchWorkouts from '@/hooks/useFetchWorkouts';
-import { IdNameType } from '@/types/data';
-
-import React from 'react';
+import { Workout } from '@/types/workout';
+import React, { useState } from 'react';
 
 const WorkoutsPage = () => {
-  const { data, isLoading, error } = useFetchWorkouts({ keys: ['id', 'name'] });
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const { data: workouts, isLoading, error } = useFetchWorkouts();
+  const { mutateAsync: addWorkout, isPending } = useAddWorkout();
 
   if (isLoading) return <p>Fetching workouts...</p>;
   if (error) return <p>Error fetching workouts</p>;
 
+  const handleAddWorkoutButtonClick = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleAddWorkout = async (workoutData: Pick<Workout, 'name'>) => {
+    try {
+      await addWorkout(workoutData);
+      setOpenDrawer(false);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : 'Error adding exercise'
+      );
+    }
+  };
+
   return (
     <div className="p-4">
-      {data?.length ? (
+      {workouts?.length ? (
         <NavigationList
           rootSlug={'workouts'}
-          list={data as IdNameType[]}
+          list={workouts as NavigationListEntry[]}
         />
       ) : (
         <p>No workouts in database</p>
       )}
-
-      <AddWorkoutForm />
+      <Button onClick={handleAddWorkoutButtonClick}>Add Workout</Button>
+      <WorkoutFormDrawer
+        open={openDrawer}
+        onOpenChange={setOpenDrawer}
+        onSubmit={handleAddWorkout}
+        isPending={isPending}
+      />
     </div>
   );
 };
