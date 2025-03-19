@@ -1,5 +1,7 @@
-import { IdNameType } from './data';
+import { Exercise } from '@prisma/client';
 
-export interface Workout extends IdNameType {
-  category: string;
+export interface Workout {
+  id: string;
+  name: string;
+  exercises: Pick<Exercise, 'id' | 'name'>[];
 }

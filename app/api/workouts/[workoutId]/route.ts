@@ -12,7 +12,9 @@ export async function GET(
   { params }: { params: Promise<{ workoutId: string }> }
 ) {
   const { workoutId } = await params;
+  console.log(' workoutId:', workoutId);
   const formattedWorkoutId = dashToUnderscore(workoutId);
+  console.log(' formattedWorkoutId:', formattedWorkoutId);
 
   try {
     const workout = (await prisma.workout.findUnique({
@@ -27,7 +29,7 @@ export async function GET(
     }
 
     return NextResponse.json<ApiResponse<Workout>>({
-      status: 'success',
+      success: true,
       message: 'Workout fetched successfully',
       data: workout,
     });
@@ -36,7 +38,7 @@ export async function GET(
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'error',
+        success: false,
         message:
           error instanceof Error
             ? error.message
@@ -73,12 +75,12 @@ export async function DELETE(
     });
 
     return NextResponse.json<ApiResponse>({
-      status: 'success',
+      success: true,
       message: 'Workout deleted',
     });
   } catch (error) {
     return NextResponse.json<ApiResponse>({
-      status: 'error',
+      success: false,
       message: error as string,
     });
   }
@@ -97,28 +99,41 @@ export async function PUT(
     const workoutExists = await prisma.workout.findFirst({
       where: { id: updatedWorkout.id },
     });
-    console.log(' workoutExists:', workoutExists);
 
-    if (workoutExists) {
+    if (!workoutExists) {
       return NextResponse.json<ApiResponse>(
-        { status: 'fail', message: 'Workout already exists in database' },
-        { status: 400 }
+        { success: false, message: 'Workout not found' },
+        { status: 404 }
       );
     }
 
-    await prisma.workout.update({
+    const newWorkout = await prisma.workout.update({
       where: { id: formattedWorkoutId },
-      data: updatedWorkout,
+      data: {
+        name: updatedWorkout.name,
+        exercises: {
+          set: fullExercises.map((exercise) => ({ id: exercise.id })),
+        },
+      },
+      include: {
+        exercises: true, // ✅ Return fully populated exercises
+      },
     });
 
     return NextResponse.json<ApiResponse>({
-      status: 'success',
+      success: true,
+      message: 'Workout updated successfully',
+      data: newWorkout,
+    });
+
+    return NextResponse.json<ApiResponse>({
+      success: true,
       message: 'Workout updated successfully',
     });
   } catch (error) {
     console.error('PUT ~ error:', error);
     return NextResponse.json<ApiResponse>(
-      { status: 'fail', message: 'Failed to update workout' },
+      { success: false, message: 'Failed to update workout' },
       { status: 500 }
     );
   }

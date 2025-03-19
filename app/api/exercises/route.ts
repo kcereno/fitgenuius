@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
-import { Exercise } from '@/types/exercise';
 import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    const exercises = (await prisma.exercise.findMany()) as Exercise[];
+    const exercises = await prisma.exercise.findMany({
+      select: {
+        id: true,
+        name: true,
+        movementType: true,
+      },
+    });
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'success',
+        success: true,
         data: exercises,
         message: 'Exercises fetched successfully',
       },
@@ -20,7 +25,7 @@ export async function GET() {
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'error',
+        success: false,
         message:
           error instanceof Error
             ? error.message
@@ -33,18 +38,17 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    // Extract new exercise
     const newExercise = await req.json();
+    console.log(' POST ~ newExercise:', newExercise);
 
     const exerciseExists = await prisma.exercise.findFirst({
       where: { id: newExercise.id },
     });
 
-    // Check if new exercise exists in database. Return error if so
     if (exerciseExists)
       return NextResponse.json<ApiResponse>(
         {
-          status: 'fail',
+          success: false,
           message: 'Exercise already exists in database',
         },
         {
@@ -52,14 +56,13 @@ export async function POST(req: NextRequest) {
         }
       );
 
-    // Add new exercise to database. Return success response
     await prisma.exercise.create({
       data: newExercise,
     });
 
     return NextResponse.json<ApiResponse>(
       {
-        status: 'success',
+        success: true,
         message: 'Exercised added successfully!',
       },
       { status: 201 }
@@ -67,7 +70,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.log(' POST ~ error:', error);
     return NextResponse.json<ApiResponse>({
-      status: 'error',
+      success: false,
       message:
         error instanceof Error ? error.message : 'An unexpected error occurred',
     });

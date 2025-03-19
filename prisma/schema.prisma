@@ -8,11 +8,40 @@ datasource db {
 }
 
 model Exercise {
-  id   String @id @default(uuid())
-  name String @unique @db.VarChar
+  id           String              @id @default(uuid())
+  name         String              @unique @db.VarChar(255)
+  movementType MovementType
+  workouts     WorkoutOnExercise[]
+  history      ExerciseHistory[]
 }
 
 model Workout {
-  id   String  @id @default(uuid())
-  name String? @db.VarChar
+  id        String              @id @default(uuid())
+  name      String?             @db.VarChar(255)
+  exercises WorkoutOnExercise[]
+}
+
+model WorkoutOnExercise {
+  exerciseId String
+  workoutId  String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  workout    Workout  @relation(fields: [workoutId], references: [id])
+
+  @@id([exerciseId, workoutId])
+}
+
+model ExerciseHistory {
+  id         String   @id @default(uuid())
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  exerciseId String
+  workoutId  String
+  date       DateTime @default(now())
+  progress   Json // Stores sets, reps, weight in JSON format
+}
+
+enum MovementType {
+  SQUAT
+  HINGE
+  PUSH
+  PULL
 }

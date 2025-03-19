@@ -9,9 +9,9 @@ export const fetchExercises = async () => {
 
   const response = (await res.json()) as ApiResponse<Exercise[]>;
 
-  if (!res.ok || response.status !== 'success' || !response.data) {
+  if (!res.ok || !response.success || !response.data) {
     return Promise.reject({
-      status: response.status,
+      status: response.success,
       message: response.message,
     });
   }
