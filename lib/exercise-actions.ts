@@ -54,8 +54,8 @@ export const addExercise = async (
 };
 
 // Delete
-export const deleteExercise = async (exerciseId: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseId}`;
+export const deleteExercise = async (exerciseSlug: string) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/${exerciseSlug}`;
 
   const res = await fetch(url, {
     method: 'DELETE',

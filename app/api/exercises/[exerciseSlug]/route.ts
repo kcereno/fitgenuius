@@ -48,14 +48,13 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ exerciseId: string }> }
+  { params }: { params: Promise<{ exerciseSlug: string }> }
 ) {
-  const { exerciseId } = await params;
-  const formattedExerciseId = dashToUnderscore(exerciseId);
+  const { exerciseSlug } = await params;
 
   try {
     const exercise = await prisma.exercise.findUnique({
-      where: { id: formattedExerciseId },
+      where: { slug: exerciseSlug },
     });
 
     if (!exercise) {
@@ -66,7 +65,7 @@ export async function DELETE(
     }
 
     await prisma.exercise.delete({
-      where: { id: formattedExerciseId },
+      where: { slug: exerciseSlug },
     });
 
     return NextResponse.json<ApiResponse>({

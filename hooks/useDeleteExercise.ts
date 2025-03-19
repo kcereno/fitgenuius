@@ -7,7 +7,8 @@ const useDeleteExercise = () => {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async (exerciseId: string) => await deleteExercise(exerciseId),
+    mutationFn: async (exerciseSlug: string) =>
+      await deleteExercise(exerciseSlug),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['exercises'] });
       router.push('/exercises');

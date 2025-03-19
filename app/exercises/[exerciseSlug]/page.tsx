@@ -18,7 +18,7 @@ const ExercisePage = () => {
     error,
   } = useFetchExercise(exerciseSlug as string);
 
-  const { mutate: deleteExerciseMutation } = useDeleteExercise();
+  const { mutate: deleteExercise, isPending } = useDeleteExercise();
 
   if (isLoading) return <p>Loading exercise...</p>;
   if (error)
@@ -36,7 +36,11 @@ const ExercisePage = () => {
   }
 
   const handleDelete = async () => {
-    deleteExerciseMutation(exerciseSlug as string);
+    try {
+      await deleteExercise(exercise.slug as string);
+    } catch (error) {
+      console.log(' handleDelete ~ error:', error);
+    }
   };
 
   return (
@@ -44,7 +48,9 @@ const ExercisePage = () => {
       <h1 className="text-center text-xl font-bold">{exercise.name}</h1>
       <div className="flex gap-4 justify-center">
         <EditExerciseForm initialExercise={exercise} />
-        <Button onClick={handleDelete}>Delete</Button>
+        <Button onClick={handleDelete}>
+          {isPending ? 'Deleting....' : 'Delete'}
+        </Button>
       </div>
     </div>
   );
