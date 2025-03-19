@@ -7,16 +7,14 @@ import { Exercise } from '@/types/exercise';
 import DialogForm from '../DialogForm/DialogForm';
 import { Button } from '../ui/button';
 import useAddExercise from '@/hooks/useAddExercise';
-import {
-  capitalizeWords,
-  normalizeToUnderscore,
-  sanitizeInput,
-} from '@/utils/formatters';
+import { capitalizeWords, sanitizeInput } from '@/utils/formatters';
 
 const INITIAL_NEW_EXERCISE_VALUE = {
   id: '',
   name: '',
 } as Exercise;
+
+// TODO: Add Movement Type Select
 
 const AddExerciseForm = () => {
   const [open, setOpen] = useState(false);
@@ -31,9 +29,13 @@ const AddExerciseForm = () => {
 
     try {
       const trimmedName = capitalizeWords(sanitizeInput(newExercise.name));
-      const id = normalizeToUnderscore(trimmedName).toLocaleLowerCase();
+      const id = crypto.randomUUID();
 
-      const sanitizedNewExercise = { id, name: trimmedName } as Exercise;
+      const sanitizedNewExercise = {
+        id,
+        name: trimmedName,
+        movementType: 'hinge',
+      } as Exercise;
 
       await addExercise(sanitizedNewExercise);
       setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
