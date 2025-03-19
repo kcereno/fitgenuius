@@ -41,7 +41,6 @@ const MobileDrawer = ({
           </DrawerDescription>
         </DrawerHeader>
         <div className="px-4">{children}</div>
-
         <DrawerFooter>
           <Button onClick={onSubmit}>Submit</Button>
           <DrawerClose asChild>

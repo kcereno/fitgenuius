@@ -10,6 +10,7 @@ datasource db {
 model Exercise {
   id           String              @id @default(uuid())
   name         String              @unique @db.VarChar(255)
+  slug         String              @unique @db.VarChar(255) // ✅ Added unique slug
   movementType MovementType
   workouts     WorkoutOnExercise[]
   history      ExerciseHistory[]
@@ -44,4 +45,6 @@ enum MovementType {
   HINGE
   PUSH
   PULL
+  CORE
+  CARRY
 }

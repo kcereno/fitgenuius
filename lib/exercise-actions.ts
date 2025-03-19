@@ -36,8 +36,10 @@ export const fetchExercise = async (exerciseId: string) => {
 
 // Add
 export const addExercise = async (
-  newExercise: Exercise
+  newExercise: Pick<Exercise, 'name' | 'movementType'>
 ): Promise<ApiResponse> => {
+  console.log(' newExercise:', newExercise);
+
   const res = await fetch('/api/exercises', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

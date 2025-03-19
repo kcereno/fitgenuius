@@ -5,7 +5,7 @@ import { Check } from 'lucide-react';
 import useFetchExercises from '@/hooks/useFetchExercises';
 import { Exercise } from '@/types/exercise';
 
-interface MobileDrawerProps {
+interface ExerciseDrawerProps {
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
   onSubmit: (exercises: Pick<Exercise, 'name'>[]) => void;
@@ -15,7 +15,7 @@ const ExerciseDrawer = ({
   open,
   onOpenChange,
   onSubmit,
-}: MobileDrawerProps) => {
+}: ExerciseDrawerProps) => {
   const [selectedExercises, setSelectedExercises] = useState<
     Pick<Exercise, 'name'>[]
   >([]);

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
 import { prisma } from '@/lib/prisma';
-import { MovementType } from '@prisma/client';
+import { slugify } from '@/utils/formatters';
+import { Exercise } from '@/types/exercise';
 
 export async function GET() {
   try {
@@ -40,40 +41,17 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const newExercise = await req.json();
-    console.log('Received:', newExercise); // ✅ Debug request payload
 
-    // ✅ Validate required fields
     if (!newExercise.name || !newExercise.movementType) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Missing required fields: name, movementType',
+          message: 'Missing required fields',
         },
         { status: 400 }
       );
     }
 
-    // ✅ Convert movementType to uppercase
-    const formattedMovementType =
-      newExercise.movementType.toUpperCase() as MovementType;
-
-    // ✅ Ensure movementType is valid
-    if (!Object.values(MovementType).includes(formattedMovementType)) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Invalid movementType. Allowed: ${Object.values(
-            MovementType
-          ).join(', ')}`,
-        },
-        { status: 400 }
-      );
-    }
-
-    // ✅ Ensure `id` is generated if missing
-    const id = newExercise.id || crypto.randomUUID();
-
-    // ✅ Check if exercise already exists by name
     const exerciseExists = await prisma.exercise.findUnique({
       where: { name: newExercise.name },
     });
@@ -85,13 +63,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ✅ Create exercise in the database
+    const formattedNewExercise: Omit<Exercise, 'history'> = {
+      ...newExercise,
+      id: crypto.randomUUID(),
+      slug: slugify(newExercise.name),
+    };
+
     const createdExercise = await prisma.exercise.create({
-      data: {
-        id,
-        name: newExercise.name,
-        movementType: formattedMovementType, // ✅ Ensured to be a valid enum
-      },
+      data: formattedNewExercise,
     });
 
     return NextResponse.json(

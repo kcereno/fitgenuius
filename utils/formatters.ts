@@ -25,3 +25,11 @@ export function dashToUnderscore(text: string): string {
 export function underscoreToDash(text: string): string {
   return text.replace(/_/g, '-'); // Replace all underscores with dashes
 }
+
+export function slugify(name: string): string {
+  return name
+    .toLowerCase() // Convert to lowercase
+    .trim() // Remove extra spaces
+    .replace(/\s+/g, '-') // Replace spaces with "-"
+    .replace(/[^a-z0-9-]/g, ''); // Remove special characters
+}
