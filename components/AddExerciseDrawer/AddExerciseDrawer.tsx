@@ -22,6 +22,10 @@ import {
 import { Button } from '../ui/button';
 import useAddExercise from '@/hooks/useAddExercise';
 import { MovementType } from '@prisma/client';
+import {
+  capitalizeFirstLetter,
+  sanitizeAndCapitalize,
+} from '@/utils/formatters';
 
 const INITIAL_NEW_EXERCISE_VALUE: Pick<Exercise, 'name' | 'movementType'> = {
   name: '',
@@ -48,7 +52,11 @@ const AddExerciseDrawer = ({ open, onOpenChange }: AddExerciseDrawerProps) => {
 
   const handleSubmit = async () => {
     try {
-      await addExercise(newExercise);
+      const sanitizedNewExercise = {
+        ...newExercise,
+        name: sanitizeAndCapitalize(newExercise.name),
+      };
+      await addExercise(sanitizedNewExercise);
 
       setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
       onOpenChange(false);
@@ -61,7 +69,10 @@ const AddExerciseDrawer = ({ open, onOpenChange }: AddExerciseDrawerProps) => {
     const inputName = e.target.name;
     const inputValue = e.target.value;
 
-    const updatedNewExercise = { ...newExercise, [inputName]: inputValue };
+    const updatedNewExercise = {
+      ...newExercise,
+      [inputName]: inputValue,
+    };
     setNewExercise(updatedNewExercise);
   };
 
@@ -116,7 +127,7 @@ const AddExerciseDrawer = ({ open, onOpenChange }: AddExerciseDrawerProps) => {
                   key={movement}
                   value={movement}
                 >
-                  {movement}
+                  {capitalizeFirstLetter(movement)}
                 </SelectItem>
               ))}
             </SelectContent>
