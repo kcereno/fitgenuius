@@ -61,7 +61,7 @@ const AddExerciseDrawer = ({ open, onOpenChange }: DrawerProps) => {
       setNewExercise(INITIAL_NEW_EXERCISE_VALUE);
       onOpenChange(false);
     } catch (error) {
-      console.log(' handleSubmit ~ error:', error);
+      console.error(' handleSubmit ~ error:', error);
     }
   };
 

@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    console.log(' POST ~ error:', error);
+    console.error(' POST ~ error:', error);
     return NextResponse.json<ApiResponse>({
       success: false,
       message:

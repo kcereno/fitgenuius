@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dashToUnderscore } from '@/utils/formatters';
+import { slugify } from '@/utils/formatters';
 import { Exercise } from '@/types/exercise';
 import { ApiResponse } from '@/types/api';
 
@@ -80,17 +80,13 @@ export async function DELETE(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ exerciseId: string }> }
-) {
-  const { exerciseId } = await params;
-  const formattedExerciseId = dashToUnderscore(exerciseId);
-  const updatedExercise = (await req.json()) as Exercise;
-
+export async function PUT(req: NextRequest) {
   try {
+    const updatedExercise = await req.json();
+    console.log(' updatedExercise:', updatedExercise);
+
     const exerciseExists = await prisma.exercise.findFirst({
-      where: { id: updatedExercise.id },
+      where: { name: updatedExercise.name },
     });
 
     if (exerciseExists) {
@@ -100,9 +96,14 @@ export async function PUT(
       );
     }
 
+    const sanitizedUpdatedExercise = {
+      ...updatedExercise,
+      slug: slugify(updatedExercise.name),
+    };
+
     await prisma.exercise.update({
-      where: { id: formattedExerciseId },
-      data: updatedExercise,
+      where: { id: updatedExercise.id },
+      data: sanitizedUpdatedExercise,
     });
 
     return NextResponse.json<ApiResponse>({

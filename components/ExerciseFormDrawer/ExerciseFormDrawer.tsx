@@ -37,7 +37,6 @@ interface ExerciseDrawerProps extends DrawerProps {
     exerciseData: Pick<Exercise, 'name' | 'movementType'>
   ) => Promise<void>;
   isPending: boolean;
-  error: Error | null;
 }
 
 const ExerciseFormDrawer = ({
@@ -46,9 +45,9 @@ const ExerciseFormDrawer = ({
   initialExercise = INITIAL_EXERCISE,
   onSubmit,
   isPending,
-  error,
 }: ExerciseDrawerProps) => {
   const [exercise, setExercise] = useState(initialExercise);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const movementTypes: MovementType[] = [
     'SQUAT',
@@ -61,6 +60,7 @@ const ExerciseFormDrawer = ({
 
   const handleSubmit = async () => {
     try {
+      setErrorMessage(null);
       const sanitizedExercise = {
         ...exercise,
         name: sanitizeAndCapitalize(exercise.name),
@@ -68,11 +68,13 @@ const ExerciseFormDrawer = ({
 
       await onSubmit(sanitizedExercise);
       setExercise(INITIAL_EXERCISE);
-      onOpenChange(false);
     } catch (error) {
-      console.log(' handleSubmit ~ error:', error);
+      setErrorMessage(
+        error instanceof Error ? error.message : 'Unknown error occured'
+      );
     }
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputName = e.target.name;
     const inputValue = e.target.value;
@@ -141,8 +143,8 @@ const ExerciseFormDrawer = ({
             </SelectContent>
           </Select>
         </div>
-        {error && (
-          <p className="text-center text-red-500 pt-2">{error.message}</p>
+        {errorMessage && (
+          <p className="text-center text-red-500 pt-2">{errorMessage}</p>
         )}
         <DrawerFooter>
           <Button onClick={handleSubmit}>

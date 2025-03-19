@@ -11,11 +11,7 @@ import { Exercise } from '@/types/exercise';
 const ExercisesPage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const { data, isLoading, error } = useFetchExercises();
-  const {
-    mutateAsync: addExercise,
-    isPending,
-    error: addExerciseError,
-  } = useAddExercise();
+  const { mutateAsync: addExercise, isPending } = useAddExercise();
 
   if (isLoading) return <p>Fetching exercises...</p>;
   if (error) return <p>Error fetching exercises</p>;
@@ -54,7 +50,6 @@ const ExercisesPage = () => {
         onOpenChange={setOpenDrawer}
         onSubmit={handleAddExercise}
         isPending={isPending}
-        error={addExerciseError}
       />
     </div>
   );
