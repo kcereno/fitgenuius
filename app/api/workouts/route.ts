@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ApiResponse } from '@/types/api';
-
 import { prisma } from '@/lib/prisma';
-import { Workout } from '@/types/workout';
+import { slugify } from '@/utils/formatters';
 
 export async function GET() {
   try {
-    const workouts = (await prisma.workout.findMany()) as Workout[];
+    const workouts = await prisma.workout.findMany();
 
     return NextResponse.json<ApiResponse>(
       {
@@ -34,28 +33,31 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    // Extract new workout
     const newWorkout = await req.json();
 
     const workoutExists = await prisma.workout.findFirst({
-      where: { id: newWorkout.id },
+      where: { name: newWorkout.name },
     });
 
-    // Check if new workout exists in database. Return error if so
     if (workoutExists)
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          message: 'workout already exists in database',
+          message: 'Workout already exists in database',
         },
         {
           status: 409,
         }
       );
 
-    // Add new workout to database. Return success response
+    const newWorkoutWithSlugAndId = {
+      ...newWorkout,
+      id: crypto.randomUUID(),
+      slug: slugify(newWorkout.name),
+    };
+
     await prisma.workout.create({
-      data: newWorkout,
+      data: newWorkoutWithSlugAndId,
     });
 
     return NextResponse.json<ApiResponse>(

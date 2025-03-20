@@ -10,15 +10,16 @@ datasource db {
 model Exercise {
   id           String              @id @default(uuid())
   name         String              @unique @db.VarChar(255)
-  slug         String              @unique @db.VarChar(255) // ✅ Added unique slug
+  slug         String              @unique @db.VarChar(255) // ✅ Unique slug added
   movementType MovementType
   workouts     WorkoutOnExercise[]
   history      ExerciseHistory[]
 }
 
 model Workout {
-  id        String              @id @default(uuid())
-  name      String?             @db.VarChar(255)
+  id    String  @id @default(uuid())
+  name  String? @unique @db.VarChar(255) // ✅ Ensure unique workout names
+  slug  String  @unique @db.VarChar(255) // ✅ Unique slug added
   exercises WorkoutOnExercise[]
 }
 
