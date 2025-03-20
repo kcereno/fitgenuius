@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 const WorkoutsPage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const { data: workouts, isLoading, error } = useFetchWorkouts();
+  console.log(' WorkoutsPage ~ workouts:', workouts);
   const { mutateAsync: addWorkout, isPending } = useAddWorkout();
 
   if (isLoading) return <p>Fetching workouts...</p>;

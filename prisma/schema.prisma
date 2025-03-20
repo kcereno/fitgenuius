@@ -18,7 +18,7 @@ model Exercise {
 
 model Workout {
   id    String  @id @default(uuid())
-  name  String? @unique @db.VarChar(255) // ✅ Ensure unique workout names
+  name  String @unique @db.VarChar(255) // ✅ Ensure unique workout names
   slug  String  @unique @db.VarChar(255) // ✅ Unique slug added
   exercises WorkoutOnExercise[]
 }

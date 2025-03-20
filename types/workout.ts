@@ -3,5 +3,8 @@ import { Exercise } from '@prisma/client';
 export interface Workout {
   id: string;
   name: string;
+}
+
+export interface WorkoutWithExercises extends Workout {
   exercises: Pick<Exercise, 'id' | 'name'>[];
 }
