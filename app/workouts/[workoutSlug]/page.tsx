@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import useFetchWorkout from '@/hooks/useFetchWorkout';
 import useDeleteWorkout from '@/hooks/useDeleteWorkout';
-import EditWorkoutForm from '@/components/EditWorkoutForm/EditWorkoutForm';
-import ExerciseDrawer from '@/components/Drawer/MobileDrawer/ExerciseDrawer';
-import { Exercise } from '@/types/exercise';
+import useEditWorkout from '@/hooks/useEditWorkout';
+import { Workout } from '@/types/workout';
+import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
 
 const WorkoutPage = () => {
-  const { workoutId } = useParams();
+  const { workoutSlug } = useParams();
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
 
@@ -20,10 +20,11 @@ const WorkoutPage = () => {
     data: workout,
     isLoading,
     error,
-  } = useFetchWorkout(workoutId as string);
+  } = useFetchWorkout(workoutSlug as string);
 
   // Mutations
   const { mutate: deleteWorkout } = useDeleteWorkout();
+  const { mutateAsync: editWorkout, isPending } = useEditWorkout();
 
   if (isLoading) return <p>Loading workout...</p>;
   if (error)
@@ -41,43 +42,43 @@ const WorkoutPage = () => {
   }
 
   const handleDelete = async () => {
-    deleteWorkout(workoutId as string);
+    deleteWorkout(workoutSlug as string);
   };
 
-  const handleUpdateWorkout = (exercises: Pick<Exercise, 'name'>[]) => {
-    console.log(' handleUpdateWorkout ~ exercises:', exercises);
-    // const updatedWorkout = { ...workout };
+  const handleEditButtonClick = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleEditWorkout = async (workoutData: Pick<Workout, 'name'>) => {
+    try {
+      await editWorkout({
+        workoutSlug: workout.slug,
+        updatedWorkout: workoutData,
+      });
+
+      setOpenDrawer(false);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : 'Error Editing exercise'
+      );
+    }
   };
 
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{workout.name}</h1>
       <div className="flex gap-4 justify-center">
-        <EditWorkoutForm initialWorkout={workout} />
+        <Button onClick={handleEditButtonClick}>Edit </Button>
         <Button onClick={handleDelete}>Delete</Button>
+        <WorkoutFormDrawer
+          open={openDrawer}
+          onOpenChange={setOpenDrawer}
+          onSubmit={handleEditWorkout}
+          initialWorkout={workout}
+          isPending={isPending}
+        />
       </div>
       <hr />
-      <div className="flex gap-4 justify-center">
-        <Button
-          onClick={() => {
-            setOpenDrawer(true);
-          }}
-        >
-          Add Exercise
-        </Button>
-        <Button>Edit</Button>
-      </div>
-      {/* Exercise List */}
-      <ul className="flex flex-col bg-gray-300">
-        <li>Item 1</li>
-        <li>Item 2</li>
-      </ul>
-
-      <ExerciseDrawer
-        open={openDrawer}
-        onOpenChange={setOpenDrawer}
-        onSubmit={handleUpdateWorkout}
-      />
     </div>
   );
 };

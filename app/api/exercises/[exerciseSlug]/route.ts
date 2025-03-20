@@ -83,31 +83,37 @@ export async function DELETE(
 export async function PUT(req: NextRequest) {
   try {
     const updatedExercise = await req.json();
-    console.log(' updatedExercise:', updatedExercise);
 
-    const exerciseExists = await prisma.exercise.findFirst({
-      where: { name: updatedExercise.name },
+    const existingExercise = await prisma.exercise.findUnique({
+      where: { id: updatedExercise.id },
     });
 
-    if (exerciseExists) {
+    if (!existingExercise) {
+      return NextResponse.json<ApiResponse>({
+        success: false,
+        message: 'Exercise cannot be found in database',
+      });
+    }
+
+    if (existingExercise.name === updatedExercise.name) {
       return NextResponse.json<ApiResponse>(
         { success: false, message: 'Exercise already exists in database' },
         { status: 400 }
       );
     }
 
-    const sanitizedUpdatedExercise = {
+    const updatedExerciseWithNewSlug = {
       ...updatedExercise,
       slug: slugify(updatedExercise.name),
     };
 
     await prisma.exercise.update({
       where: { id: updatedExercise.id },
-      data: sanitizedUpdatedExercise,
+      data: updatedExerciseWithNewSlug,
     });
 
     return NextResponse.json<ApiResponse>({
-      success: false,
+      success: true,
       message: 'Exercise updated successfully',
     });
   } catch (error) {

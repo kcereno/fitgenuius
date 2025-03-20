@@ -3,11 +3,11 @@ import { useRouter } from 'next/navigation';
 import { ApiResponse } from '@/types/api';
 import { editWorkout } from '@/lib/workout-actions';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { slugify } from '@/utils/formatters';
 
 interface EditWorkoutVariables {
-  workoutId: string;
-  updatedWorkout: Workout;
-  redirectTo?: string; //
+  workoutSlug: string;
+  updatedWorkout: Pick<Workout, 'name'>;
 }
 
 const useEditWorkout = () => {
@@ -15,14 +15,12 @@ const useEditWorkout = () => {
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse, Error, EditWorkoutVariables>({
-    mutationFn: ({ workoutId, updatedWorkout }) =>
-      editWorkout(workoutId, updatedWorkout),
+    mutationFn: ({ workoutSlug, updatedWorkout }) =>
+      editWorkout(workoutSlug, updatedWorkout),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });
 
-      if (variables.redirectTo) {
-        router.push(variables.redirectTo);
-      }
+      router.push(slugify(variables.updatedWorkout.name));
     },
   });
 };

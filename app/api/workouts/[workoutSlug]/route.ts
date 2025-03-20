@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { dashToUnderscore } from '@/utils/formatters';
+
 import { Workout } from '@/types/workout';
 import { ApiResponse } from '@/types/api';
 
 import { PrismaClient } from '@prisma/client';
+import { slugify } from '@/utils/formatters';
 
 const prisma = new PrismaClient();
 
@@ -80,54 +81,48 @@ export async function DELETE(
   }
 }
 
-// export async function PUT(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ workoutId: string }> }
-// ) {
-//   const { workoutId } = await params;
-//   const formattedWorkoutId = dashToUnderscore(workoutId);
-//   const updatedWorkout = (await req.json()) as Workout;
+export async function PUT(req: NextRequest) {
+  try {
+    const updatedWorkout = await req.json();
 
-//   try {
-//     const workoutExists = await prisma.workout.findFirst({
-//       where: { id: updatedWorkout.id },
-//     });
+    const existingWorkout = await prisma.workout.findUnique({
+      where: { id: updatedWorkout.id },
+    });
 
-//     if (!workoutExists) {
-//       return NextResponse.json<ApiResponse>(
-//         { success: false, message: 'Workout not found' },
-//         { status: 404 }
-//       );
-//     }
+    if (!existingWorkout) {
+      return NextResponse.json<ApiResponse>({
+        success: false,
+        message: 'Workout cannot be found in database',
+      });
+    }
 
-//     const newWorkout = await prisma.workout.update({
-//       where: { id: formattedWorkoutId },
-//       data: {
-//         name: updatedWorkout.name,
-//         exercises: {
-//           set: fullExercises.map((exercise) => ({ id: exercise.id })),
-//         },
-//       },
-//       include: {
-//         exercises: true, // ✅ Return fully populated exercises
-//       },
-//     });
+    if (existingWorkout.name === updatedWorkout.name) {
+      return NextResponse.json<ApiResponse>({
+        success: false,
+        message: 'Existing workout with that name',
+      });
+    }
 
-//     return NextResponse.json<ApiResponse>({
-//       success: true,
-//       message: 'Workout updated successfully',
-//       data: newWorkout,
-//     });
+    const updatedWorkoutWithNewSlug = {
+      ...updatedWorkout,
+      slug: slugify(updatedWorkout.name),
+    };
+    console.log(' PUT ~ updatedWorkoutWithNewSlug:', updatedWorkoutWithNewSlug);
 
-//     return NextResponse.json<ApiResponse>({
-//       success: true,
-//       message: 'Workout updated successfully',
-//     });
-//   } catch (error) {
-//     console.error('PUT ~ error:', error);
-//     return NextResponse.json<ApiResponse>(
-//       { success: false, message: 'Failed to update workout' },
-//       { status: 500 }
-//     );
-//   }
-// }
+    await prisma.workout.update({
+      where: { id: updatedWorkout.id },
+      data: updatedWorkoutWithNewSlug,
+    });
+
+    return NextResponse.json<ApiResponse>({
+      success: true,
+      message: 'Workout updated successfully',
+    });
+  } catch (error) {
+    console.error('PUT ~ error:', error);
+    return NextResponse.json<ApiResponse>(
+      { success: false, message: 'Failed to update workout' },
+      { status: 500 }
+    );
+  }
+}

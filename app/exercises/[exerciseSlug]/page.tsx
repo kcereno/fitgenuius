@@ -23,7 +23,6 @@ const ExercisePage = () => {
   } = useFetchExercise(exerciseSlug as string);
 
   const { mutateAsync: deleteExercise } = useDeleteExercise();
-
   const { mutateAsync: editExercise, isPending } = useEditExercise();
 
   if (fetchExerciseIsLoading) return <p>Loading exercise...</p>;
@@ -36,6 +35,7 @@ const ExercisePage = () => {
         </Link>
       </div>
     );
+
   if (!exercise) {
     router.push('/exercises');
     return null;
