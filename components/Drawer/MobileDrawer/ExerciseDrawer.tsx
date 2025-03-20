@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import MobileDrawer from './MobileDrawer';
 import { Check } from 'lucide-react';
-import useFetchExercises from '@/hooks/useFetchExercises';
+import useFetchExercises from '@/hooks/exercises/useFetchExercises';
 import { Exercise } from '@/types/exercise';
 
 interface ExerciseDrawerProps {

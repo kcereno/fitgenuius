@@ -75,16 +75,16 @@ export const deleteWorkout = async (workoutId: string) => {
 };
 
 // Edit
-export const editWorkout = async (
+export const updateWorkout = async (
   workoutSlug: string,
-  updatedWorkoutData: Pick<Workout, 'name'>
+  updatedWorkout: Pick<Workout, 'name'>
 ): Promise<ApiResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutSlug}`;
 
   const res = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updatedWorkoutData),
+    body: JSON.stringify(updatedWorkout),
   });
 
   const response = (await res.json()) as ApiResponse;

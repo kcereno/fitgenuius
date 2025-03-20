@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import useFetchWorkout from '@/hooks/useFetchWorkout';
-import useDeleteWorkout from '@/hooks/useDeleteWorkout';
-import useEditWorkout from '@/hooks/useEditWorkout';
+import useFetchWorkout from '@/hooks/workout/useFetchWorkout';
+import useDeleteWorkout from '@/hooks/workout/useDeleteWorkout';
+import useEditWorkout from '@/hooks/workout/useUpdateWorkout';
 import { Workout } from '@/types/workout';
 import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
 
@@ -15,14 +15,12 @@ const WorkoutPage = () => {
   const router = useRouter();
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  // Fetching
   const {
     data: workout,
     isLoading,
     error,
   } = useFetchWorkout(workoutSlug as string);
 
-  // Mutations
   const { mutate: deleteWorkout } = useDeleteWorkout();
   const { mutateAsync: editWorkout, isPending } = useEditWorkout();
 

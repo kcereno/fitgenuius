@@ -3,8 +3,8 @@
 import NavigationList, { NavigationListEntry } from '@/components/List/List';
 import { Button } from '@/components/ui/button';
 import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
-import useAddWorkout from '@/hooks/useAddWorkout';
-import useFetchWorkouts from '@/hooks/useFetchWorkouts';
+import useAddWorkout from '@/hooks/workout/useAddWorkout';
+import useFetchWorkouts from '@/hooks/workouts/useFetchWorkouts';
 import { Workout } from '@/types/workout';
 import React, { useState } from 'react';
 

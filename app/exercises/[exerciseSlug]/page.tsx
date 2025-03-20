@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 
-import useFetchExercise from '@/hooks/useFetchExercise';
-import useDeleteExercise from '@/hooks/useDeleteExercise';
+import useFetchExercise from '@/hooks/exercise/useFetchExercise';
+import useDeleteExercise from '@/hooks/exercise/useDeleteExercise';
 import Link from 'next/link';
 import ExerciseFormDrawer from '@/components/ExerciseFormDrawer/ExerciseFormDrawer';
-import useEditExercise from '@/hooks/useEditExercise';
+import useEditExercise from '@/hooks/exercise/useUpdateExercise';
 import { Exercise } from '@/types/exercise';
 
 const ExercisePage = () => {

@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import useFetchExercises from '@/hooks/useFetchExercises';
+import useFetchExercises from '@/hooks/exercises/useFetchExercises';
 import NavigationList, { NavigationListEntry } from '@/components/List/List';
 import { Button } from '@/components/ui/button';
 import ExerciseFormDrawer from '@/components/ExerciseFormDrawer/ExerciseFormDrawer';
-import useAddExercise from '@/hooks/useAddExercise';
+import useAddExercise from '@/hooks/exercise/useAddExercise';
 import { Exercise } from '@/types/exercise';
 
 const ExercisesPage = () => {

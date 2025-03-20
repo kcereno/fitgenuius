@@ -74,7 +74,7 @@ export const deleteExercise = async (exerciseSlug: string) => {
 };
 
 // Edit
-export const editExercise = async (
+export const updateExercise = async (
   slug: string,
   updatedExercise: Pick<Exercise, 'name' | 'movementType'>
 ): Promise<ApiResponse> => {

@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/types/api';
 import { Exercise } from '@/types/exercise';
-import { editExercise } from '@/lib/exercise-actions';
+import { updateExercise } from '@/lib/exercise-actions';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { slugify } from '@/utils/formatters';
@@ -10,13 +10,13 @@ interface EditExerciseVariables {
   updatedExercise: Pick<Exercise, 'name' | 'movementType'>;
 }
 
-const useEditExercise = () => {
+const useUpdateExercise = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation<ApiResponse, Error, EditExerciseVariables>({
     mutationFn: ({ slug, updatedExercise }) =>
-      editExercise(slug, updatedExercise),
+      updateExercise(slug, updatedExercise),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['exercises'] });
       router.push(slugify(variables.updatedExercise.name));
@@ -24,4 +24,4 @@ const useEditExercise = () => {
   });
 };
 
-export default useEditExercise;
+export default useUpdateExercise;
