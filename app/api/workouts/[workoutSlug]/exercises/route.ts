@@ -1,28 +1,20 @@
-import { prisma } from '@/lib/prisma';
-import { ApiResponse } from '@/types/api';
-import { Exercise } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
-export async function GET(
+const prisma = new PrismaClient();
+
+export const GET = async (
   req: NextRequest,
-  { params }: { params: Promise<{ workoutId: string }> }
-) {
+  { params }: { params: Promise<{ workoutSlug: string }> }
+) => {
   try {
-    const { workoutId } = await params;
+    const { workoutSlug } = await params;
 
-    if (!workoutId) {
-      return NextResponse.json(
-        { success: false, message: 'workoutId is required' },
-        { status: 400 }
-      );
-    }
-
-    // Fetch workout with exercises
     const workout = await prisma.workout.findUnique({
-      where: { id: workoutId },
+      where: { slug: workoutSlug },
       include: {
         exercises: {
-          select: {
+          include: {
             exercise: {
               select: {
                 id: true,
@@ -41,12 +33,53 @@ export async function GET(
       );
     }
 
-    // Extract exercises from nested structure
-    const formattedWorkout = {
+    const formatted = {
       id: workout.id,
       name: workout.name,
-      exercises: workout.exercises.map((ex) => ex.exercise), // Extract exercise objects
+      slug: workout.slug,
+      exercises: workout.exercises.map((entry) => entry.exercise),
     };
+
+    return NextResponse.json({ success: true, data: formatted });
+  } catch (error) {
+    console.error('GET /workouts/[slug]/exercises error:', error);
+    return NextResponse.json(
+      { success: false, message: 'Failed to fetch workout exercises' },
+      { status: 500 }
+    );
+  }
+};
+
+export const PUT = async (
+  req: NextRequest,
+  { params }: { params: Promise<{ workoutSlug: string }> }
+) => {
+  try {
+    const { workoutSlug } = await params;
+    const { exerciseIds } = await req.json();
+
+    if (!Array.isArray(exerciseIds)) {
+      return NextResponse.json(
+        { success: false, message: 'exerciseIds must be an array' },
+        { status: 400 }
+      );
+    }
+
+    // Validate all exerciseIds exist
+    const validExercises = await prisma.exercise.findMany({
+      where: { id: { in: exerciseIds } },
+    });
+
+    if (validExercises.length !== exerciseIds.length) {
+      return NextResponse.json(
+        { success: false, message: 'One or more exercise IDs are invalid' },
+        { status: 400 }
+      );
+    }
+
+    const workout = await prisma.workout.findUnique({
+      where: { slug: workoutSlug },
+    });
 
     if (!workout) {
       return NextResponse.json(
@@ -55,81 +88,29 @@ export async function GET(
       );
     }
 
-    return NextResponse.json<ApiResponse>(
-      {
-        success: true,
-        data: formattedWorkout,
-        message: 'Workout exercises fetched successfully',
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error('GET /api/workouts/{workoutId}/exercises error:', error);
-    return NextResponse.json(
-      { success: false, message: 'Internal Server Error' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ workoutId: string }> }
-) {
-  try {
-    const { workoutId } = await params;
-    const { exercises } = await req.json();
-
-    const workoutExists = await prisma.workout.findUnique({
-      where: { id: workoutId },
-    });
-
-    if (!workoutExists) {
-      return NextResponse.json<ApiResponse>({
-        success: false,
-        message: 'Workout cannot be found',
-      });
-    }
-
-    // Validate that all provided exercises exist in the database
-    const exerciseIds = exercises.map(
-      (ex: Pick<Exercise, 'id' | 'name'>) => ex.id
-    );
-    const validExercises = await prisma.exercise.findMany({
-      where: { id: { in: exerciseIds } },
-    });
-
-    if (validExercises.length !== exerciseIds.length) {
-      return NextResponse.json(
-        { success: false, message: 'Some exercise IDs are invalid' },
-        { status: 400 }
-      );
-    }
-
-    // Remove existing exercises from the workout
     await prisma.workoutOnExercise.deleteMany({
-      where: { workoutId },
+      where: { workoutId: workout.id },
     });
 
-    // Add new exercises to the workout
-    const newEntries = validExercises.map((exercise) => ({
-      workoutId,
-      exerciseId: exercise.id,
+    const connections = exerciseIds.map((id) => ({
+      workoutId: workout.id,
+      exerciseId: id,
     }));
 
     await prisma.workoutOnExercise.createMany({
-      data: newEntries,
+      data: connections,
+      skipDuplicates: true,
     });
 
-    return NextResponse.json<ApiResponse>({
+    return NextResponse.json({
       success: true,
-      message: 'Exercises updated',
+      message: 'Exercises added to workout successfully.',
     });
   } catch (error) {
-    console.error('PUT /api/workouts/{workoutId}/exercises error:', error);
+    console.error('PUT /workouts/[slug]/exercises error:', error);
     return NextResponse.json(
-      { success: false, message: 'Internal Server Error' },
+      { success: false, message: 'Failed to update exercises' },
       { status: 500 }
     );
   }
-}
+};
