@@ -9,6 +9,7 @@ import useDeleteWorkout from '@/hooks/workout/useDeleteWorkout';
 import useEditWorkout from '@/hooks/workout/useUpdateWorkout';
 import { Workout } from '@/types/workout';
 import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
+import useFetchExercisesInWorkout from '@/hooks/exercisesInWorkout/useFetchExercisesInWorkout';
 
 const WorkoutPage = () => {
   const { workoutSlug } = useParams();
@@ -20,9 +21,12 @@ const WorkoutPage = () => {
     isLoading,
     error,
   } = useFetchWorkout(workoutSlug as string);
+  console.log(' WorkoutPage ~ workout:', workout);
 
   const { mutate: deleteWorkout } = useDeleteWorkout();
   const { mutateAsync: editWorkout, isPending } = useEditWorkout();
+  const { data } = useFetchExercisesInWorkout(workoutSlug as string);
+  const exercisesInWorkout = data?.exercises;
 
   if (isLoading) return <p>Loading workout...</p>;
   if (error)
@@ -77,6 +81,11 @@ const WorkoutPage = () => {
         />
       </div>
       <hr />
+      <ul>
+        {exercisesInWorkout?.map((exercise) => (
+          <li key={exercise.id}>{exercise.name}</li>
+        ))}
+      </ul>
     </div>
   );
 };
