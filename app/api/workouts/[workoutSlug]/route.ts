@@ -1,47 +1,54 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Workout } from '@/types/workout';
 import { ApiResponse } from '@/types/api';
 import { slugify } from '@/utils/formatters';
 import { prisma } from '@/lib/prisma';
 
-export async function GET(
+export const GET = async (
   req: NextRequest,
   { params }: { params: Promise<{ workoutSlug: string }> }
-) {
-  const { workoutSlug } = await params;
-
+) => {
   try {
+    const { workoutSlug } = await params;
+
     const workout = await prisma.workout.findUnique({
       where: { slug: workoutSlug },
+      include: {
+        exercises: {
+          include: {
+            exercise: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!workout) {
       return NextResponse.json(
-        { status: 'error', message: 'Workout not found' },
+        { success: false, message: 'Workout not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json<ApiResponse<Workout>>({
-      success: true,
-      message: 'Workout fetched successfully',
-      data: workout,
-    });
-  } catch (error) {
-    console.error('GET ~ error:', error);
+    const formatted = {
+      id: workout.id,
+      name: workout.name,
+      slug: workout.slug,
+      exercises: workout.exercises.map((entry) => entry.exercise),
+    };
 
-    return NextResponse.json<ApiResponse>(
-      {
-        success: false,
-        message:
-          error instanceof Error
-            ? error.message
-            : 'An unexpected error occurred',
-      },
+    return NextResponse.json({ success: true, data: formatted });
+  } catch (error) {
+    console.error('GET /workouts/[slug]/exercises error:', error);
+    return NextResponse.json(
+      { success: false, message: 'Failed to fetch workout exercises' },
       { status: 500 }
     );
   }
-}
+};
 
 export async function DELETE(
   req: NextRequest,

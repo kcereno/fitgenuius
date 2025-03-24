@@ -4,8 +4,9 @@ export interface Workout {
   id: string;
   name: string;
   slug: string;
-}
-
-export interface WorkoutWithExercises extends Workout {
   exercises: Pick<Exercise, 'id' | 'name'>[];
 }
+
+// export interface WorkoutWithExercises extends Workout {
+//   exercises: Pick<Exercise, 'id' | 'name'>[];
+// }
