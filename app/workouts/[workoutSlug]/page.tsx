@@ -9,11 +9,13 @@ import useDeleteWorkout from '@/hooks/workout/useDeleteWorkout';
 import useEditWorkout from '@/hooks/workout/useUpdateWorkout';
 import { Workout } from '@/types/workout';
 import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
+import ExerciseListDrawer from '@/components/ExerciseListDrawer/ExerciseListDrawer';
 
 const WorkoutPage = () => {
   const { workoutSlug } = useParams();
   const router = useRouter();
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const [openWorkoutFormDrawer, setOpenWorkoutFormDrawer] = useState(false);
+  const [openExerciseListDrawer, setOpenExerciseListDrawer] = useState(false);
 
   const {
     data: workout,
@@ -21,7 +23,8 @@ const WorkoutPage = () => {
     error,
   } = useFetchWorkout(workoutSlug as string);
   const { mutate: deleteWorkout } = useDeleteWorkout();
-  const { mutateAsync: editWorkout, isPending } = useEditWorkout();
+  const { mutateAsync: editWorkout, isPending: editWorkoutIsPending } =
+    useEditWorkout();
 
   if (isLoading) return <p>Loading workout...</p>;
   if (error)
@@ -43,7 +46,7 @@ const WorkoutPage = () => {
   };
 
   const handleEditButtonClick = () => {
-    setOpenDrawer(true);
+    setOpenWorkoutFormDrawer(true);
   };
 
   const handleEditWorkout = async (workoutData: Pick<Workout, 'name'>) => {
@@ -53,7 +56,7 @@ const WorkoutPage = () => {
         updatedWorkout: workoutData,
       });
 
-      setOpenDrawer(false);
+      setOpenWorkoutFormDrawer(false);
     } catch (error) {
       throw new Error(
         error instanceof Error ? error.message : 'Error Editing exercise'
@@ -61,6 +64,9 @@ const WorkoutPage = () => {
     }
   };
 
+  const handleSelectExerciseButtonClick = () => {
+    setOpenExerciseListDrawer(true);
+  };
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{workout.name}</h1>
@@ -68,14 +74,24 @@ const WorkoutPage = () => {
         <Button onClick={handleEditButtonClick}>Edit </Button>
         <Button onClick={handleDelete}>Delete</Button>
         <WorkoutFormDrawer
-          open={openDrawer}
-          onOpenChange={setOpenDrawer}
+          open={openWorkoutFormDrawer}
+          onOpenChange={setOpenWorkoutFormDrawer}
           onSubmit={handleEditWorkout}
           initialWorkout={workout}
-          isPending={isPending}
+          isPending={editWorkoutIsPending}
         />
       </div>
       <hr />
+      <Button onClick={handleSelectExerciseButtonClick}>
+        Select Exercises
+      </Button>
+      <ExerciseListDrawer
+        open={openExerciseListDrawer}
+        onOpenChange={setOpenExerciseListDrawer}
+        onSubmit={() => {}}
+        initialExercises={workout.exercises}
+        // isPending={isPending}
+      />
       <ul>
         {workout.exercises.map((exercise) => (
           <li key={exercise.id}>{exercise.name}</li>
