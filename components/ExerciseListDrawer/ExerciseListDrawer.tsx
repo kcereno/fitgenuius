@@ -12,6 +12,7 @@ import {
 import { Button } from '../ui/button';
 import useFetchExercises from '@/hooks/exercises/useFetchExercises';
 import { Exercise } from '@/types/exercise';
+import { CheckIcon, DeleteIcon } from 'lucide-react';
 
 interface ExerciseDrawerProps extends DrawerProps {
   onSubmit: () => void;
@@ -40,6 +41,9 @@ ExerciseDrawerProps) => {
   const handleExerciseClick = (
     selectedExercise: Pick<Exercise, 'id' | 'name'>
   ) => {
+    const alreadySelected = isSelected(selectedExercise.name);
+    if (alreadySelected) return;
+
     const updatedSelectedExercises: Pick<Exercise, 'id' | 'name'>[] = [
       ...selectedExercises,
       selectedExercise,
@@ -62,58 +66,66 @@ ExerciseDrawerProps) => {
       onOpenChange={onOpenChange}
       autoFocus={open}
     >
-      <DrawerContent className="h-full">
-        <DrawerHeader>
+      <DrawerContent className="h-full flex flex-col">
+        <DrawerHeader className="hidden">
           <DrawerTitle>Exercises</DrawerTitle>
           <DrawerDescription>Select exercises</DrawerDescription>
         </DrawerHeader>
-        {isPending ?? <p>Fetching exercise</p>}
-        <div className="p-4">
-          <h1 className="font-bold">Selected Exercises</h1>
-          <ul>
-            {selectedExercises.map((exercise) => (
-              <li
-                key={exercise.id}
-                onClick={() => {
-                  handleSelectedExerciseClick({
-                    id: exercise.id,
-                    name: exercise.name,
-                  });
-                }}
-              >
-                {exercise.name}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <hr />
-        <div className="gap-4 px-4">
-          {exercises ? (
+        {isPending && <p>Fetching exercise</p>}
+
+        <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="p-6">
+            <h1 className="font-bold mb text-lg">Selected Exercises</h1>
             <ul>
-              {exercises.map((exercise) => (
+              {selectedExercises.map((exercise) => (
                 <li
                   key={exercise.id}
-                  className={isSelected(exercise.name) ? 'bg-red-500' : ''}
-                  onClick={() => {
-                    handleExerciseClick({
-                      id: exercise.id,
-                      name: exercise.name,
-                    });
-                  }}
+                  className="flex justify-between"
                 >
-                  {exercise.name}
+                  <div>{exercise.name}</div>
+                  <DeleteIcon
+                    onClick={() =>
+                      handleSelectedExerciseClick({
+                        id: exercise.id,
+                        name: exercise.name,
+                      })
+                    }
+                  />
                 </li>
               ))}
             </ul>
-          ) : (
-            <p>Unable to fetch exercises</p>
-          )}
+          </div>
+
+          <hr className="mx-6" />
+
+          <h1 className="font-bold mx-6 pt-2 text-lg">Exercises</h1>
+          <div className="px-6 flex-1 overflow-y-auto">
+            {exercises ? (
+              <ul>
+                {exercises.map((exercise) => (
+                  <li
+                    key={exercise.id}
+                    className="flex justify-between"
+                    onClick={() =>
+                      handleExerciseClick({
+                        id: exercise.id,
+                        name: exercise.name,
+                      })
+                    }
+                  >
+                    <div>{exercise.name}</div>
+                    {isSelected(exercise.name) && <CheckIcon />}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>Unable to fetch exercises</p>
+            )}
+          </div>
         </div>
-        <DrawerFooter>
-          <Button onClick={handleSubmit}>
-            {/* {isPending ? 'Submitting...' : 'Submit'} */}
-            Submit
-          </Button>
+
+        <DrawerFooter className="shrink-0">
+          <Button onClick={handleSubmit}>Submit</Button>
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
