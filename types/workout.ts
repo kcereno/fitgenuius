@@ -1,9 +1,11 @@
 import { Exercise } from '@prisma/client';
 
 export interface Workout {
-  id: string;
-  name: string;
-  slug: string;
+  details: {
+    id: string;
+    name: string;
+    slug: string;
+  };
   exercises: Pick<Exercise, 'id' | 'name'>[];
 }
 

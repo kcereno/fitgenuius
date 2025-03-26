@@ -29,7 +29,10 @@ const WorkoutPage = () => {
     data: workout,
     isLoading: workoutIsLoading,
     error,
-  } = useFetchWorkout(workoutSlug as string);
+  } = useFetchWorkout(workoutSlug as string, {
+    include: ['details', 'exercises'],
+  });
+  console.log(' WorkoutPage ~ workout:', workout);
   const { mutate: deleteWorkout } = useDeleteWorkout();
   const { mutateAsync: editWorkout, isPending: editWorkoutIsPending } =
     useEditWorkout();
@@ -47,11 +50,13 @@ const WorkoutPage = () => {
     setOpenWorkoutFormDrawer(true);
   };
 
-  const handleEditWorkout = async (workoutData: Pick<Workout, 'name'>) => {
+  const handleEditWorkout = async (
+    workoutData: Pick<Workout['details'], 'name'>
+  ) => {
     if (!workout) return;
     try {
       await editWorkout({
-        workoutSlug: workout.slug,
+        workoutSlug: workout.details.slug,
         updatedWorkout: workoutData,
       });
 
@@ -74,7 +79,7 @@ const WorkoutPage = () => {
 
     try {
       await updateExercisesInWorkout({
-        workoutSlug: workout.slug,
+        workoutSlug: workout.details.slug,
         updatedExercises: exerciseIds,
       });
       setOpenExerciseListDrawer(false);
@@ -106,9 +111,10 @@ const WorkoutPage = () => {
     return null;
   }
 
+  console.log(workout.details);
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
-      <h1 className="text-center text-xl font-bold">{workout.name}</h1>
+      <h1 className="text-center text-xl font-bold">{workout.details.name}</h1>
       <div className="flex gap-4 justify-center">
         <Button onClick={handleEditButtonClick}>Edit </Button>
         <Button onClick={handleDelete}>Delete</Button>
@@ -116,7 +122,7 @@ const WorkoutPage = () => {
           open={openWorkoutFormDrawer}
           onOpenChange={setOpenWorkoutFormDrawer}
           onSubmit={handleEditWorkout}
-          initialWorkout={workout}
+          initialWorkout={workout.details}
           isPending={editWorkoutIsPending}
         />
       </div>

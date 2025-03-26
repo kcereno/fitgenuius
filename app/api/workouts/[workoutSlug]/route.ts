@@ -10,21 +10,34 @@ export const GET = async (
   try {
     const { workoutSlug } = await params;
 
+    // Parse query string
+    const searchParams = req.nextUrl.searchParams;
+    const includeParams = searchParams.get('include');
+    const includes = includeParams?.split(',') ?? ['details'];
+
+    const includeExercises = includes.includes('exercises');
+    // const includeHistory = includes.includes('history');
+
+    // Fetch from DB
     const workout = await prisma.workout.findUnique({
       where: { slug: workoutSlug },
       include: {
-        exercises: {
-          include: {
-            exercise: {
-              select: {
-                id: true,
-                name: true,
+        exercises: includeExercises
+          ? {
+              include: {
+                exercise: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
               },
-            },
-          },
-        },
+            }
+          : false,
+        // history: includeHistory ? true : false, // Uncomment when you have history
       },
     });
+    console.log(' workout:', workout);
 
     if (!workout) {
       return NextResponse.json(
@@ -33,18 +46,42 @@ export const GET = async (
       );
     }
 
-    const formatted = {
-      id: workout.id,
-      name: workout.name,
-      slug: workout.slug,
-      exercises: workout.exercises.map((entry) => entry.exercise),
-    };
+    // Format response
+    const response: Record<string, unknown> = {};
 
-    return NextResponse.json({ success: true, data: formatted });
+    if (includes.includes('details')) {
+      response.details = {
+        id: workout.id,
+        name: workout.name,
+        slug: workout.slug,
+      };
+    }
+
+    if (includeExercises && workout.exercises) {
+      const exercises = workout.exercises as Array<{
+        exerciseId: string;
+        workoutId: string;
+        exercise: { id: string; name: string };
+      }>;
+
+      response.exercises = exercises.map((entry) => ({
+        id: entry.exercise.id,
+        name: entry.exercise.name,
+      }));
+    }
+    // placeholder until history is defined
+    // if (includeHistory && 'history' in workout) {
+    //   response.history = workout.history;
+    // }
+
+    return NextResponse.json({
+      success: true,
+      data: response,
+    });
   } catch (error) {
-    console.error('GET /workouts/[slug]/exercises error:', error);
+    console.error('GET /workouts/[slug] error:', error);
     return NextResponse.json(
-      { success: false, message: 'Failed to fetch workout exercises' },
+      { success: false, message: 'Failed to fetch workout' },
       { status: 500 }
     );
   }

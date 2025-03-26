@@ -1,6 +1,7 @@
 import { ApiResponse } from '@/types/api';
 
 import { Workout } from '@/types/workout';
+import { UseFetchWorkoutOptions } from '@/hooks/workout/useFetchWorkout';
 
 // Fetch
 export const fetchWorkouts = async () => {
@@ -19,8 +20,14 @@ export const fetchWorkouts = async () => {
   return response.data;
 };
 
-export const fetchWorkout = async (workoutId: string) => {
-  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutId}`;
+export const fetchWorkout = async (
+  workoutId: string,
+  options?: UseFetchWorkoutOptions
+) => {
+  const include = options?.include?.length ? options.include : ['details'];
+  const query = `?include=${include.join(',')}`;
+
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutId}${query}`;
   const res = await fetch(url);
 
   if (!res.ok) {
@@ -37,7 +44,7 @@ export const fetchWorkout = async (workoutId: string) => {
 
 // Add
 export const addWorkout = async (
-  newWorkout: Pick<Workout, 'name'>
+  newWorkout: Pick<Workout['details'], 'name'>
 ): Promise<ApiResponse> => {
   const res = await fetch('/api/workouts', {
     method: 'POST',
@@ -77,7 +84,7 @@ export const deleteWorkout = async (workoutId: string) => {
 // Edit
 export const updateWorkout = async (
   workoutSlug: string,
-  updatedWorkout: Pick<Workout, 'name'>
+  updatedWorkout: Pick<Workout['details'], 'name'>
 ): Promise<ApiResponse> => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutSlug}`;
 

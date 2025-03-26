@@ -15,13 +15,15 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { sanitizeAndCapitalize } from '@/utils/formatters';
 
-const INITIAL_WORKOUT: Pick<Workout, 'name'> = {
+const INITIAL_WORKOUT: Workout['details'] = {
   name: '',
+  id: '',
+  slug: '',
 };
 
 interface WorkoutFormDrawerProps extends DrawerProps {
-  initialWorkout?: Pick<Workout, 'name'>;
-  onSubmit: (workoutData: Pick<Workout, 'name'>) => Promise<void>;
+  initialWorkout?: Workout['details'];
+  onSubmit: (workoutData: Pick<Workout['details'], 'name'>) => Promise<void>;
   isPending: boolean;
 }
 
