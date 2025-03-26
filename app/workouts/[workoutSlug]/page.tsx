@@ -2,49 +2,43 @@
 
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+
+import { Button } from '@/components/ui/button';
+import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
+import ExerciseListDrawer from '@/components/ExerciseListDrawer/ExerciseListDrawer';
+
 import useFetchWorkout from '@/hooks/workout/useFetchWorkout';
 import useDeleteWorkout from '@/hooks/workout/useDeleteWorkout';
 import useEditWorkout from '@/hooks/workout/useUpdateWorkout';
-import { Workout } from '@/types/workout';
-import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
-import ExerciseListDrawer from '@/components/ExerciseListDrawer/ExerciseListDrawer';
-import { Exercise } from '@/types/exercise';
 import useUpdateExercisesInWorkout from '@/hooks/workout/useUpdateExercisesInWorkout';
+
+import { Workout } from '@/types/workout';
+import { Exercise } from '@/types/exercise';
 
 const WorkoutPage = () => {
   const { workoutSlug } = useParams();
   const router = useRouter();
+
+  // States
   const [openWorkoutFormDrawer, setOpenWorkoutFormDrawer] = useState(false);
   const [openExerciseListDrawer, setOpenExerciseListDrawer] = useState(false);
 
+  // Queries and Mutations
   const {
     data: workout,
-    isLoading,
+    isLoading: workoutIsLoading,
     error,
   } = useFetchWorkout(workoutSlug as string);
   const { mutate: deleteWorkout } = useDeleteWorkout();
   const { mutateAsync: editWorkout, isPending: editWorkoutIsPending } =
     useEditWorkout();
-  const { mutateAsync: updateExercisesInWorkout } =
-    useUpdateExercisesInWorkout();
+  const {
+    mutateAsync: updateExercisesInWorkout,
+    isPending: updateExerciseInWorkoutIsPending,
+  } = useUpdateExercisesInWorkout();
 
-  if (isLoading) return <p>Loading workout...</p>;
-  if (error)
-    return (
-      <div>
-        <p>{error.message}</p>
-        <Link href={'/workouts'}>
-          <Button>Go back to exercise list</Button>workout
-        </Link>
-      </div>
-    );
-  if (!workout) {
-    router.push('/exercises');
-    return null;
-  }
-
+  // Handlers
   const handleDelete = async () => {
     deleteWorkout(workoutSlug as string);
   };
@@ -54,6 +48,7 @@ const WorkoutPage = () => {
   };
 
   const handleEditWorkout = async (workoutData: Pick<Workout, 'name'>) => {
+    if (!workout) return;
     try {
       await editWorkout({
         workoutSlug: workout.slug,
@@ -71,6 +66,8 @@ const WorkoutPage = () => {
   const handleUpdateExercisesInWorkout = async (
     updatedExercises: Pick<Exercise, 'id' | 'name'>[]
   ) => {
+    if (!workout) return;
+
     const exerciseIds = updatedExercises.map(
       (updatedExercise) => updatedExercise.id
     );
@@ -91,6 +88,24 @@ const WorkoutPage = () => {
   const handleSelectExerciseButtonClick = () => {
     setOpenExerciseListDrawer(true);
   };
+
+  // Loading and Error handling
+  if (workoutIsLoading) return <p>Loading workout...</p>;
+
+  if (error)
+    return (
+      <div>
+        <p>{error.message}</p>
+        <Link href={'/workouts'}>
+          <Button>Go back to exercise list</Button>workout
+        </Link>
+      </div>
+    );
+  if (!workout) {
+    router.push('/exercises');
+    return null;
+  }
+
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{workout.name}</h1>
@@ -114,7 +129,7 @@ const WorkoutPage = () => {
         onOpenChange={setOpenExerciseListDrawer}
         onSubmit={handleUpdateExercisesInWorkout}
         initialExercises={workout.exercises}
-        // isPending={isPending}
+        isPending={updateExerciseInWorkoutIsPending}
       />
       <ul>
         {workout.exercises.map((exercise) => (

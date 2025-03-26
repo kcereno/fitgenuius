@@ -17,7 +17,7 @@ import { CheckIcon, DeleteIcon } from 'lucide-react';
 interface ExerciseDrawerProps extends DrawerProps {
   onSubmit: (updatedExercises: Pick<Exercise, 'id' | 'name'>[]) => void;
   initialExercises: Pick<Exercise, 'id' | 'name'>[];
-  // isPending: boolean;
+  isPending: boolean;
 }
 
 const ExerciseListDrawer = ({
@@ -25,12 +25,13 @@ const ExerciseListDrawer = ({
   onOpenChange,
   onSubmit,
   initialExercises,
-}: // isPending,
-ExerciseDrawerProps) => {
+  isPending,
+}: ExerciseDrawerProps) => {
   const [selectedExercises, setSelectedExercises] =
     useState<Pick<Exercise, 'id' | 'name'>[]>(initialExercises);
 
-  const { data: exercises, isPending } = useFetchExercises();
+  const { data: exercises, isPending: fetchExerciseIsPending } =
+    useFetchExercises();
 
   const isSelected = (exerciseName: string) =>
     selectedExercises.some(
@@ -73,7 +74,7 @@ ExerciseDrawerProps) => {
           <DrawerTitle>Exercises</DrawerTitle>
           <DrawerDescription>Select exercises</DrawerDescription>
         </DrawerHeader>
-        {isPending && <p>Fetching exercise</p>}
+        {fetchExerciseIsPending && <p>Fetching exercise</p>}
 
         <div className="flex-1 overflow-hidden flex flex-col">
           <div className="p-6">
@@ -127,7 +128,9 @@ ExerciseDrawerProps) => {
         </div>
 
         <DrawerFooter className="shrink-0">
-          <Button onClick={handleSubmit}>Submit</Button>
+          <Button onClick={handleSubmit}>
+            {isPending ? 'Submitting....' : 'Submit'}
+          </Button>
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>
           </DrawerClose>
