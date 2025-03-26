@@ -54,7 +54,7 @@ export const PUT = async (
 ) => {
   try {
     const { workoutSlug } = await params;
-    const { exerciseIds } = await req.json();
+    const exerciseIds = await req.json();
 
     if (!Array.isArray(exerciseIds)) {
       return NextResponse.json(
@@ -63,7 +63,6 @@ export const PUT = async (
       );
     }
 
-    // Validate all exerciseIds exist
     const validExercises = await prisma.exercise.findMany({
       where: { id: { in: exerciseIds } },
     });

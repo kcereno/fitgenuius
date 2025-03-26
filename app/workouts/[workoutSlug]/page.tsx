@@ -10,6 +10,8 @@ import useEditWorkout from '@/hooks/workout/useUpdateWorkout';
 import { Workout } from '@/types/workout';
 import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
 import ExerciseListDrawer from '@/components/ExerciseListDrawer/ExerciseListDrawer';
+import { Exercise } from '@/types/exercise';
+import useUpdateExercisesInWorkout from '@/hooks/workout/useUpdateExercisesInWorkout';
 
 const WorkoutPage = () => {
   const { workoutSlug } = useParams();
@@ -25,6 +27,8 @@ const WorkoutPage = () => {
   const { mutate: deleteWorkout } = useDeleteWorkout();
   const { mutateAsync: editWorkout, isPending: editWorkoutIsPending } =
     useEditWorkout();
+  const { mutateAsync: updateExercisesInWorkout } =
+    useUpdateExercisesInWorkout();
 
   if (isLoading) return <p>Loading workout...</p>;
   if (error)
@@ -64,6 +68,26 @@ const WorkoutPage = () => {
     }
   };
 
+  const handleUpdateExercisesInWorkout = async (
+    updatedExercises: Pick<Exercise, 'id' | 'name'>[]
+  ) => {
+    const exerciseIds = updatedExercises.map(
+      (updatedExercise) => updatedExercise.id
+    );
+
+    try {
+      await updateExercisesInWorkout({
+        workoutSlug: workout.slug,
+        updatedExercises: exerciseIds,
+      });
+      setOpenExerciseListDrawer(false);
+    } catch (error) {
+      throw new Error(
+        error instanceof Error ? error.message : 'Error Editing exercise'
+      );
+    }
+  };
+
   const handleSelectExerciseButtonClick = () => {
     setOpenExerciseListDrawer(true);
   };
@@ -88,7 +112,7 @@ const WorkoutPage = () => {
       <ExerciseListDrawer
         open={openExerciseListDrawer}
         onOpenChange={setOpenExerciseListDrawer}
-        onSubmit={() => {}}
+        onSubmit={handleUpdateExercisesInWorkout}
         initialExercises={workout.exercises}
         // isPending={isPending}
       />

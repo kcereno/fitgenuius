@@ -15,7 +15,7 @@ import { Exercise } from '@/types/exercise';
 import { CheckIcon, DeleteIcon } from 'lucide-react';
 
 interface ExerciseDrawerProps extends DrawerProps {
-  onSubmit: () => void;
+  onSubmit: (updatedExercises: Pick<Exercise, 'id' | 'name'>[]) => void;
   initialExercises: Pick<Exercise, 'id' | 'name'>[];
   // isPending: boolean;
 }
@@ -37,7 +37,9 @@ ExerciseDrawerProps) => {
       (selectedExercise) => selectedExercise.name === exerciseName
     );
 
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    onSubmit(selectedExercises);
+  };
   const handleExerciseClick = (
     selectedExercise: Pick<Exercise, 'id' | 'name'>
   ) => {
