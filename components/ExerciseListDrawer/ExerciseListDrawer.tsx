@@ -12,7 +12,7 @@ import {
 import { Button } from '../ui/button';
 import useFetchExercises from '@/hooks/exercises/useFetchExercises';
 import { Exercise } from '@/types/exercise';
-import { CheckIcon, DeleteIcon } from 'lucide-react';
+import { CheckIcon, ChevronDown, ChevronUp, DeleteIcon } from 'lucide-react';
 
 interface ExerciseDrawerProps extends DrawerProps {
   onSubmit: (updatedExercises: Pick<Exercise, 'id' | 'name'>[]) => void;
@@ -32,6 +32,26 @@ const ExerciseListDrawer = ({
 
   const { data: exercises, isPending: fetchExerciseIsPending } =
     useFetchExercises();
+
+  const moveUp = (index: number) => {
+    if (index === 0) return; //
+    const newSelectedExercises = [...selectedExercises];
+    [newSelectedExercises[index - 1], newSelectedExercises[index]] = [
+      newSelectedExercises[index],
+      newSelectedExercises[index - 1],
+    ];
+    setSelectedExercises(newSelectedExercises);
+  };
+
+  const moveDown = (index: number) => {
+    if (index === selectedExercises.length - 1) return;
+    const newSelectedExercises = [...selectedExercises];
+    [newSelectedExercises[index + 1], newSelectedExercises[index]] = [
+      newSelectedExercises[index],
+      newSelectedExercises[index + 1],
+    ];
+    setSelectedExercises(newSelectedExercises);
+  };
 
   const isSelected = (exerciseName: string) =>
     selectedExercises.some(
@@ -80,12 +100,20 @@ const ExerciseListDrawer = ({
           <div className="p-6">
             <h1 className="font-bold mb text-lg">Selected Exercises</h1>
             <ul>
-              {selectedExercises.map((exercise) => (
+              {selectedExercises.map((exercise, index) => (
                 <li
                   key={exercise.id}
-                  className="flex justify-between"
+                  className="grid grid-cols-[auto_1fr_auto] gap-4"
                 >
-                  <div>{exercise.name}</div>
+                  <div className="flex">
+                    <button disabled={index === 0}>
+                      <ChevronUp onClick={() => moveUp(index)} />
+                    </button>
+                    <button>
+                      <ChevronDown onClick={() => moveDown(index)} />
+                    </button>
+                  </div>
+                  <div className="">{exercise.name}</div>
                   <DeleteIcon
                     onClick={() =>
                       handleSelectedExerciseClick({
