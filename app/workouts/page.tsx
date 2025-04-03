@@ -20,7 +20,9 @@ const WorkoutsPage = () => {
     setOpenDrawer(true);
   };
 
-  const handleAddWorkout = async (workoutData: Pick<Workout, 'name'>) => {
+  const handleAddWorkout = async (
+    workoutData: Pick<Workout['details'], 'name'>
+  ) => {
     try {
       await addWorkout(workoutData);
       setOpenDrawer(false);
