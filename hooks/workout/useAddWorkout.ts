@@ -6,7 +6,7 @@ const useAddWorkout = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (newWorkout: Pick<Workout, 'name'>) =>
+    mutationFn: async (newWorkout: Pick<Workout['details'], 'name'>) =>
       await addWorkout(newWorkout),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workouts'] });

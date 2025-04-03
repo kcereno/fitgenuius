@@ -7,7 +7,7 @@ import { slugify } from '@/utils/formatters';
 
 interface EditWorkoutVariables {
   workoutSlug: string;
-  updatedWorkout: Pick<Workout, 'name'>;
+  updatedWorkout: Pick<Workout['details'], 'name'>;
 }
 
 const useUpdateWorkout = () => {
