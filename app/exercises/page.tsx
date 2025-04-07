@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import useFetchExercises from '@/hooks/exercises/useFetchExercises';
 import NavigationList, { NavigationListEntry } from '@/components/List/List';
-import { Button } from '@/components/ui/button';
 import ExerciseFormDrawer from '@/components/ExerciseFormDrawer/ExerciseFormDrawer';
 import useAddExercise from '@/hooks/exercise/useAddExercise';
 import { Exercise } from '@/types/exercise';
+import BottomActionButton from '@/components/BottomActionButton/BottomActionButton';
 
 const ExercisesPage = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -44,7 +44,9 @@ const ExercisesPage = () => {
         <p>No exercises in database</p>
       )}
 
-      <Button onClick={handleAddExerciseButtonClick}>Add Exercise</Button>
+      <BottomActionButton onClick={handleAddExerciseButtonClick}>
+        Add Exercise
+      </BottomActionButton>
 
       <ExerciseFormDrawer
         open={openDrawer}

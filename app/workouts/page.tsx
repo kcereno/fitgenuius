@@ -1,7 +1,7 @@
 'use client';
 
+import BottomActionButton from '@/components/BottomActionButton/BottomActionButton';
 import NavigationList, { NavigationListEntry } from '@/components/List/List';
-import { Button } from '@/components/ui/button';
 import WorkoutFormDrawer from '@/components/WorkoutFormDrawer/WorkoutFormDrawer';
 import useAddWorkout from '@/hooks/workout/useAddWorkout';
 import useFetchWorkouts from '@/hooks/workouts/useFetchWorkouts';
@@ -43,7 +43,10 @@ const WorkoutsPage = () => {
       ) : (
         <p>No workouts in database</p>
       )}
-      <Button onClick={handleAddWorkoutButtonClick}>Add Workout</Button>
+
+      <BottomActionButton onClick={handleAddWorkoutButtonClick}>
+        Add Workout
+      </BottomActionButton>
       <WorkoutFormDrawer
         open={openDrawer}
         onOpenChange={setOpenDrawer}

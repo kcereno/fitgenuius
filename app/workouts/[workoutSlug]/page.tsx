@@ -15,6 +15,7 @@ import useUpdateExercisesInWorkout from '@/hooks/workout/useUpdateExercisesInWor
 
 import { Workout } from '@/types/workout';
 import { Exercise } from '@/types/exercise';
+import BottomActionButton from '@/components/BottomActionButton/BottomActionButton';
 
 const WorkoutPage = () => {
   const { workoutSlug } = useParams();
@@ -126,6 +127,7 @@ const WorkoutPage = () => {
         />
       </div>
       <hr />
+      {/* Exercise List and Selection */}
       <Button onClick={handleSelectExerciseButtonClick}>
         Select Exercises
       </Button>
@@ -141,6 +143,7 @@ const WorkoutPage = () => {
           <li key={exercise.id}>{exercise.name}</li>
         ))}
       </ul>
+      <BottomActionButton>Start Logging Workout</BottomActionButton>
     </div>
   );
 };
