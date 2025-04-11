@@ -10,7 +10,7 @@ datasource db {
 model Exercise {
   id           String              @id @default(uuid())
   name         String              @unique @db.VarChar(255)
-  slug         String              @unique @db.VarChar(255) // ✅ Unique slug added
+  slug         String              @unique @db.VarChar(255) 
   movementType MovementType
   workouts     WorkoutOnExercise[]
   history      ExerciseHistory[]

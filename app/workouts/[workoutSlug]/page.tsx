@@ -33,6 +33,7 @@ const WorkoutPage = () => {
   } = useFetchWorkout(workoutSlug as string, {
     include: ['details', 'exercises'],
   });
+  console.log(' WorkoutPage ~ workout:', workout);
 
   const { mutate: deleteWorkout } = useDeleteWorkout();
   const { mutateAsync: editWorkout, isPending: editWorkoutIsPending } =

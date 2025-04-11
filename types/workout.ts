@@ -1,4 +1,4 @@
-import { Exercise } from '@prisma/client';
+import { Exercise } from './exercise';
 
 export interface Workout {
   details: {
@@ -6,7 +6,7 @@ export interface Workout {
     name: string;
     slug: string;
   };
-  exercises: Pick<Exercise, 'id' | 'name'>[];
+  exercises: Pick<Exercise, 'id' | 'name' | 'slug'>[];
 }
 
 // export interface WorkoutWithExercises extends Workout {

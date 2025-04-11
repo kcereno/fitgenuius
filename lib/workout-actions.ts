@@ -107,7 +107,6 @@ export const updateExercisesInWorkout = async (
   workoutSlug: string,
   exerciseIds: string[]
 ): Promise<ApiResponse> => {
-  console.log(' exerciseIds:', exerciseIds);
   const url = `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/${workoutSlug}/exercises`;
 
   const res = await fetch(url, {

@@ -29,6 +29,7 @@ export const GET = async (
                   select: {
                     id: true,
                     name: true,
+                    slug: true,
                   },
                 },
               },
@@ -37,7 +38,6 @@ export const GET = async (
         // history: includeHistory ? true : false, // Uncomment when you have history
       },
     });
-    console.log(' workout:', workout);
 
     if (!workout) {
       return NextResponse.json(
@@ -61,12 +61,13 @@ export const GET = async (
       const exercises = workout.exercises as Array<{
         exerciseId: string;
         workoutId: string;
-        exercise: { id: string; name: string };
+        exercise: { id: string; name: string; slug: string };
       }>;
 
       response.exercises = exercises.map((entry) => ({
         id: entry.exercise.id,
         name: entry.exercise.name,
+        slug: entry.exercise.slug,
       }));
     }
     // placeholder until history is defined
