@@ -113,6 +113,9 @@ const WorkoutPage = () => {
     return null;
   }
 
+  // Helpers
+  const firstExerciseSlug = workout.exercises[0].slug;
+
   return (
     <div className="p-4 flex flex-col min-h-screen gap-4">
       <h1 className="text-center text-xl font-bold">{workout.details.name}</h1>
@@ -144,7 +147,9 @@ const WorkoutPage = () => {
           <li key={exercise.id}>{exercise.name}</li>
         ))}
       </ul>
-      <BottomActionButton>Start Logging Workout</BottomActionButton>
+      <BottomActionButton href={`/exercises/${firstExerciseSlug}/log`}>
+        Start Logging Workout
+      </BottomActionButton>
     </div>
   );
 };

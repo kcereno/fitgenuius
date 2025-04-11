@@ -3,21 +3,21 @@ import React from 'react';
 import { Button } from '../ui/button';
 
 interface BottomActionButtonProps {
-  url?: string;
+  href?: string;
   onClick?: () => void;
   children: React.ReactNode;
 }
 
 const BottomActionButton = ({
-  url,
+  href,
   onClick,
   children,
 }: BottomActionButtonProps) => {
   const classes = 'fixed bottom-24 left-1/2 transform -translate-x-1/2';
 
-  if (url) {
+  if (href) {
     return (
-      <Link href={url}>
+      <Link href={href}>
         <Button className={classes}> {children}</Button>
       </Link>
     );
