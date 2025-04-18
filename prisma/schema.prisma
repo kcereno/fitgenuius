@@ -37,7 +37,7 @@ model ExerciseHistory {
   exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   exerciseId String
   date       DateTime @default(now())
-  progress   Json     // Set, reps, weight, notes
+  log   Json     // Set, reps, weight, notes
 }
 
 enum MovementType {
