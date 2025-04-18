@@ -36,9 +36,8 @@ model ExerciseHistory {
   id         String   @id @default(uuid())
   exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   exerciseId String
-  workoutId  String
   date       DateTime @default(now())
-  progress   Json // Stores sets, reps, weight in JSON format
+  progress   Json     // Set, reps, weight, notes
 }
 
 enum MovementType {
